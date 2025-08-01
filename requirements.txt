@@ -1,0 +1,6 @@
+Flask
+firebase-admin
+requests
+Pillow
+reportlab
+google-cloud-firestore
