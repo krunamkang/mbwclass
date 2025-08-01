@@ -19,7 +19,7 @@ from google.cloud.firestore_v1.base_query import FieldFilter
 
 
 app = Flask(__name__)
-cred = credentials.Certificate("cred/serviceAccountKey.json")  # เปลี่ยน 'on' เป็นที่อยู่ของไฟล์ที่คุณดาวน์โหลด
+cred = credentials.Certificate("/etc/secrets/serviceAccountKey.json")  # เปลี่ยน 'on' เป็นที่อยู่ของไฟล์ที่คุณดาวน์โหลด
 
 firebase_admin.initialize_app(cred)
 db = firestore.client()
@@ -450,7 +450,7 @@ def submit_comment():
       
         
 
-        
+
         return redirect(url_for('show_comment', option='option4',lesson_name=lesson_name,lesson_id=lesson_id))
 
 
