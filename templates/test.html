@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แท็บกิจกรรม</title>
+    <style>
+        .custom-body { font-family: Arial, sans-serif; }
+        .custom-tabs { display: flex; cursor: pointer; }
+        .custom-tab { padding: 10px 20px; border: 1px solid #ccc; border-bottom: none; background: #f1f1f1; }
+        .custom-tab-active { background: white; font-weight: bold; }
+        .custom-content { display: none; padding: 20px; border: 1px solid #ccc; }
+        .custom-content-active { display: block; }
+    </style>
+</head>
+<body class="custom-body">
+    <div class="custom-tabs">
+        <div class="custom-tab custom-tab-active" onclick="showTab(0)">กิจกรรมที่ 1</div>
+        <div class="custom-tab" onclick="showTab(1)">กิจกรรมที่่ 2</div>
+    </div>
+    <div class="custom-content custom-content-active">
+        <h2>ประวัติศรีสะเกษ</h2>
+        {% include 'quiz.html' %}
+    </div>
+    <div class="custom-content">
+      <h2>คำชี้แจง</h2>
+        <p>1. ให้นักเรียนสร้างชิ้นงานหัวข้อเรื่อง ขุนหาญบ้านฉัน<p>
+          <p>2. ชิ้นงานมีขนาด A4 แนวนอน โดยให้ประกอบด้วยภาพนักเรียน ภาพสถานที่อำเภอขุนหาญ พร้อมคำอธิบายโดยย่อ<p>
+          <p>3. เมื่อสร้างชิ้นงานเสร็จให้นักเรียนดาวน์โหลดเป็นไฟล์ภาพ ชนิด png ตั้งชื่อไฟล์เป็นชื่อตนเอง จากนั้นจึง upload ไฟล์งานส่งครู<p>
+      <hr style="margin: 30px 0;">
+    
+      <h3>📤 ส่งไฟล์งานออกแบบ</h3>
+      <form action="/upload" method="POST" enctype="multipart/form-data" style="margin-top: 15px;">
+        <label for="file">เลือกไฟล์:</label><br>
+        <input type="file" id="file" name="file" required style="margin-top: 10px;"><br><br>
+    
+        <button type="submit" style="padding: 8px 18px; background-color: #28a745; color: white; border: none; border-radius: 6px;">ตกลง</button>
+        <button type="reset" style="padding: 8px 18px; background-color: #dc3545; color: white; border: none; border-radius: 6px; margin-left: 10px;">ยกเลิก</button>
+      </form>
+    </div>
+    
+    
+    <script>
+        function showTab(index) {
+            var tabs = document.querySelectorAll(".custom-tab");
+            var contents = document.querySelectorAll(".custom-content");
+            
+            tabs.forEach(tab => tab.classList.remove("custom-tab-active"));
+            contents.forEach(content => content.classList.remove("custom-content-active"));
+            
+            tabs[index].classList.add("custom-tab-active");
+            contents[index].classList.add("custom-content-active");
+        }
+    </script>
+</body>
+</html>

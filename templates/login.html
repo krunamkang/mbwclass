@@ -1,0 +1,154 @@
+
+<style>
+    .login-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 100%;
+    }
+    .login-container h2 {
+        text-align: center;
+    }
+    .login-container input[type="email"],
+    .login-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .login-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .login-container button:hover {
+        background-color: #45a049;
+    }
+    .signup-link {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .welcome-message {
+        margin: 20px 0;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .progress-container {
+        margin: 20px 0;
+        background-color: #f3f3f3;
+        border-radius: 8px;
+        padding: 15px;
+    }
+    .progress-status {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .progress-bar {
+        width: 100%;
+        background-color: #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+    .progress-bar div {
+        height: 24px;
+        width: 0;
+        background-color: #4CAF50;
+        transition: width 0.5s, background-color 0.5s;
+    }
+</style>
+
+{% if session.get('user_data') %}
+    <div class="welcome-message">
+        ยินดีต้อนรับ {{ session['user_data']['firstname'] }} {{ session['user_data']['lastname'] }}
+    </div>
+
+{% else %}
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+        <div class="signup-link">
+            <a href="{{ url_for('register') }}">สมัครสมาชิก</a>
+        </div>
+    </div>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // JavaScript to change the progress bar width and color
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize the variable with a default value of 0
+        var progressStatus = "{{ session.get('user_data')['progress_status'] | default(0) | tojson }}";
+        
+        // Convert progressStatus to an integer
+        progressStatus = parseInt(progressStatus) || 0; // Ensure it defaults to 0 if NaN
+
+        var progressBarFill = document.getElementById("progress-bar-fill");
+        
+        // Set the width of the progress bar based on the progress status
+        progressBarFill.style.width = progressStatus + "%";
+        
+        // Change the color based on the progress value
+        if (progressStatus >= 75) {
+            progressBarFill.style.backgroundColor = "#4CAF50"; // Green
+        } else if (progressStatus >= 50) {
+            progressBarFill.style.backgroundColor = "#FFEB3B"; // Yellow
+        } else if (progressStatus >= 25) {
+            progressBarFill.style.backgroundColor = "#FF9800"; // Orange
+        } else {
+            progressBarFill.style.backgroundColor = "#F44336"; // Red
+        }
+    });
+
+
+    
+
+    function showPopup(message) {
+        let msgText = '';
+        let icon = '';
+    
+        if (message === 'fail') {
+            msgText = "เข้าสู่บทเรียนไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password";
+            icon = 'error';
+        } else if (message === 'success') {
+            msgText = "ยินดีต้อนรับสู่บทเรียน";
+            icon = 'success';
+        } else {
+            return; // ถ้าไม่ใช่ success หรือ fail จะไม่ทำอะไร
+        }
+    
+        Swal.fire({
+            title: "การเข้าสู่บทเรียน",
+            text: msgText,
+            icon: icon,
+            confirmButtonText: "ตกลง"
+        });
+    }
+    
+    // ดึงค่าพารามิเตอร์จาก URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+    const nav = urlParams.get('nav');
+   
+    if (message&&nav==='หน้าแรก') {
+        showPopup(message);
+    }
+    
+</script>

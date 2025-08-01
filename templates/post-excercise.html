@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบสอบถาม</title>
+    <style>
+        .containerex {
+            max-width: 70%;
+            margin: 0px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .question h2 {
+            font-size: 18px;
+            color: #555;
+        }
+        .question-image {
+            width: 30%;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .option-image {
+            width: 15%;
+            height: auto;
+            margin-top: 5px;
+            display: block;
+            margin-left: 30px;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 16px;
+            color: #444;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="containerex">
+        <h1>แบบสอบถามหลังเรียน</h1>
+        <h1>Lesson: {{ lesson_name }}</h1>
+        <p>Lesson ID: {{ lesson_id }}</p>
+        <form action="/add_score" method="POST">
+            {% for question in questions %}
+                <div class="question">
+                    <h2>ข้อที่ {{ loop.index }} : {{ question.question_text }}</h2>
+                    {% if question.img_question %}
+                        <div style="text-align: center;">
+                           
+                            <img src="{{ question.img_question }}" alt="Question Image" class="question-image" onerror="this.style.display='none'">
+                        </div>
+                    {% endif %}
+
+                    {% for idx in range(question.choices|length) %}
+                    <label>
+                        {% set key = 'choice' ~ (idx+1) %}
+                        <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
+                    </label>
+                    {% if question.img_choices[key] %}
+                        {% set img_path = url_for('static', filename='uploads/' ~ question.img_choices[key]) %}
+                        <img src="{{ img_path }}" alt="Option Image" class="option-image" onerror="this.style.display='none'">
+                    {% endif %}
+                {% endfor %}
+                
+                </div>
+            {% endfor %}
+            <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
+            <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
+            <input type="hidden" name="state" value="{{ 'post' }}"> 
+        
+            <button type="submit">ส่งคำตอบ</button>
+        </form>
+        
+    </div>
+</body>
+</html>

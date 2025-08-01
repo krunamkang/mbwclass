@@ -1,0 +1,155 @@
+<style>
+    .containerles {
+        max-width: 100%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-container {
+        text-align: center;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .tabs {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .tab-button {
+        background-color: #12d87f;
+        color: white;
+        flex: 1;
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        border: none;
+        border-right: 1px solid white;
+        transition: background-color 0.3s, transform 0.3s;
+        font-size: 16px;
+    }
+
+    .tab-button:hover {
+        background-color: #0fa055;
+        transform: scale(1.05);
+    }
+
+    .tab-button.active {
+        background-color: #c6c447;
+        color: white;
+        font-weight: bold;
+    }
+
+    .tab-button:last-child {
+        border-right: none;
+    }
+
+    .tab-content {
+        padding: 10px;
+        border: 1px solid #12d87f;
+        border-radius: 5px;
+        margin-top: 10px;
+        display: none; /* ซ่อนเนื้อหาทั้งหมดเริ่มต้น */
+    }
+
+    .tab-content.active {
+        display: block; /* แสดงเนื้อหาเมื่อมีการคลิก */
+    }
+
+    .comment-item {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="containerles ">
+    <h1>วิดีโอสาธิต</h1>
+    <div class="video-container">
+        {% if videos %}
+        <video controls>
+            <source src="{{ url_for('static', filename='videos/'+videos) }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    {% else %}
+        <p>No video available.</p>
+    {% endif %}
+    </div>
+    <form action="/show_comment" method="GET">
+        <div class="tabs">
+            <button class="tab-button {{ 'active' if option == 'option1' else '' }}" type="submit" name="option" value="option1">แบบทดสอบก่อนเรียน</button>
+            <button class="tab-button {{ 'active' if option == 'option2' else '' }}" type="submit" name="option" value="option2">กิจกรรม</button>
+            <button class="tab-button {{ 'active' if option == 'option3' else '' }}" type="submit" name="option" value="option3">แบบทดสอบหลังเรียน</button>
+            <button class="tab-button {{ 'active' if option == 'option4' else '' }}" type="submit" name="option" value="option4">ความคิดเห็น</button>
+            <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
+            <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
+        </div>
+    </form>
+
+    <div class="content">
+        {% if session['user_data'] %}
+            <div id="option1" class="tab-content {{ 'active' if option == 'option1' else '' }}">{% include 'pre-excercise.html' %}</div>
+            <div id="option2" class="tab-content {{ 'active' if option == 'option2' else '' }}">{% include 'quiz3.html' %}</div>
+            <div id="option3" class="tab-content {{ 'active' if option == 'option3' else '' }}">{% include 'post-excercise.html' %}</div>
+        {% else %}
+            <div id="option1" class="tab-content {{ 'active' if option == 'option1' else '' }}">ต้อง Login ก่อนทำ แบบทดสอบ</div>
+            <div id="option2" class="tab-content {{ 'active' if option == 'option2' else '' }}">ต้อง Login ก่อนทำกิจกรรม</div>
+            <div id="option3" class="tab-content {{ 'active' if option == 'option3' else '' }}">ต้อง Login ก่อนทำแบบทดสอบหลังเรียน</div>
+
+        {% endif %}
+        <div id="option4" class="tab-content {{ 'active' if option == 'option4' else '' }}">
+            <h2>แสดงความคิดเห็น</h2>
+            <form action="/submit_comment" method="POST">
+                <textarea name="comment" id="comment" placeholder="เขียนความคิดเห็นของคุณที่นี่..." rows="4" style="width: 100%; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+                <button   type="submit" name="option" value="option4"  onclick="submitComment()"  style="margin-top: 10px; padding: 10px 20px; background-color: #bc96de; color: white; border: none; border-radius: 5px; cursor: pointer;">ส่งความคิดเห็น</button>
+                <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
+                <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
+                </form>
+            <div id="previous-comments" style="margin-top: 20px;">
+                <h3>ความคิดเห็นก่อนหน้า:</h3>
+                {% if comments %}
+                    {% for comment in comments %}
+                    {% if comment['user_id'] %}
+                    <p><strong>{{ comment['user_id'] }}:</strong> {{ comment['comment'] }}</p>
+                    {% else %}
+                    <p><strong>ผู้ใช้ทั่วไป:</strong> {{ comment['comment'] }}</p>
+                    {% endif %}
+
+                    {% endfor %}
+                {% else %}
+                    <p>ยังไม่มีความคิดเห็นในขณะนี้</p>
+                {% endif %}
+                <div id="comments-list"></div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    function submitComment() {
+        const comment = document.getElementById('comment').value;
+        if (comment) {
+            const commentsList = document.getElementById('comments-list');
+            const commentItem = document.createElement('div');
+            commentItem.className = 'comment-item';
+            commentItem.textContent = comment;
+            commentsList.appendChild(commentItem);
+          //  document.getElementById('comment').value = ''; // ล้างช่องความคิดเห็น
+        } else {
+            alert("กรุณาใส่ความคิดเห็นก่อนส่ง!");
+        }
+    }
+</script>

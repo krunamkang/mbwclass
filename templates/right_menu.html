@@ -1,0 +1,43 @@
+
+  <style>
+    .image-list {
+      width: 100%;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .image-list a {
+      display: flex;
+      margin-bottom: 5px;
+    }
+
+    .image-list img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .image-list img:hover {
+      transform: scale(1.03);
+    }
+  </style>
+
+
+
+  <div class="image-list">
+    <a href="https://www.canva.com" target="_blank">
+      <img src="{{ url_for('static', filename='images/canva3.png') }}" alt="Image 3">
+    </a>
+    <a href="https://kahoot.it" target="_blank">
+      <img src="{{ url_for('static', filename='images/kahoot.png') }}" alt="Image 1">
+    </a>
+    <a href="https://www.google.com" target="_blank">
+      <img src="{{ url_for('static', filename='images/google.png') }}" alt="Image 2">
+    </a>
+
+  </div>
+
+
+

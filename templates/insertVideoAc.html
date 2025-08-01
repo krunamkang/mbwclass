@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เพิ่มข้อมูลวิดีโอและกิจกรรม</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f5;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .form-section h2 {
+            color: #444;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .file-name {
+            margin-top: 5px;
+            font-style: italic;
+            color: #666;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center; /* จัดให้อยู่ตรงกลาง */
+            gap: 10px;
+        }
+        .button-group-right {
+            display: flex;
+            justify-content: flex-end; /* จัดชิดขวา */
+            gap: 10px;
+        }
+        button {
+            width: 25%; /* กำหนดขนาดปุ่มให้กว้างประมาณ 1 ใน 4 ของกล่อง */
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+        .cancel-button {
+            background-color: #f44336;
+            color: white;
+        }
+        .cancel-button:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <h1>เพิ่มข้อมูลวิดีโอและกิจกรรม</h1>
+
+    <!-- Form Section: Video and Activity Data -->
+    <div class="form-section">
+        <form action="/" style="display: inline;">
+            <div class="button-group-right">
+                <button type="submit" class="home-button">กลับหน้าหลัก</button>
+            </div>
+        </form>
+        <h2>เพิ่มข้อมูล</h2>
+     
+        <form action="/insert_video_data" method="POST" enctype="multipart/form-data" >
+            <label for="lesson_name">ชื่อบทเรียน:</label>
+            <select id="lesson_name" name="lesson_name" required>
+                <option value="">เลือกชื่อบทเรียน</option>
+                <option value="บทที่ 1 ก้าวแรกกับการพัฒนา">บทที่ 1 ก้าวแรกกับการพัฒนา </option>
+                <option value="บทที่ 2 ดีไซน์หน้าจอให้โดดเด่น">บทที่ 2 ดีไซน์หน้าจอให้โดดเด่น</option>
+                <option value="บทที่ 3 สนุกกับการเขียนโค้ดบล็อก">บทที่ 3 สนุกกับการเขียนโค้ดบล็อก </option>
+                <option value="บทที่ 4 ปลดล็อกพลังเซ็นเซอร์มือถือ">บทที่ 4 ปลดล็อกพลังเซ็นเซอร์มือถือ </option>
+                <option value="บทที่ 5 สร้างสรรชิ้นงานเพื่อชุมชน">บทที่ 5 สร้างสรรชิ้นงานเพื่อชุมชน </option>
+                <option value="บทที่ 6 ทดสอบและปรับปรุง">บทที่ 6 ทดสอบและปรับปรุง</option>
+                <option value="บทที่ 7 นำเสนอและเผยแพร่">บทที่ 7 นำเสนอและเผยแพร่</option>
+            </select><br>
+
+            <label for="lesson_id">รหัสบทเรียน:</label>
+            <select id="lesson_id" name="lesson_id" required>
+                <option value="">เลือกรหัสบทเรียน</option>
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+                <option value="L4">L4</option>
+            </select><br>
+
+            <label for="topic_name">ชื่อหัวข้อ:</label>
+            <input type="text" id="topic_name" name="topic_name" required><br>
+
+            <label for="video_name">ชื่อวิดีโอ:</label>
+            <input type="text" id="video_name" name="video_name" required><br>
+
+            <label for="video_path">เลือกไฟล์วิดีโอ:</label>
+            <label class="custom-file-upload">
+                <input type="file" id="video_path" name="video_path" accept="video/*" required>
+                เลือกวิดีโอ
+            </label>
+            <span class="file-name" id="video_file_name"></span><br>
+
+            <label for="activity_name">ชื่อกิจกรรม:</label>
+            <input type="text" id="activity_name" name="activity_name" required><br>
+
+            <label for="activity_path">เลือกไฟล์กิจกรรม:</label>
+            <label class="custom-file-upload">
+                <input type="file" id="activity_path" name="activity_path" accept=".pdf,.doc,.docx,.zip" required>
+                เลือกไฟล์
+            </label>
+            <span class="file-name" id="activity_file_name"></span><br>
+
+            <div class="button-group">
+                
+                <button type="button" class="cancel-button" onclick="resetForm()">ยกเลิก</button>
+                <button type="submit" value="Submit" class="submit-button">บันทึกข้อมูล</button>
+            </div>
+        </form>
+      
+    </div>
+
+    <script>
+        // แสดงชื่อไฟล์เมื่ออัปโหลด
+        document.getElementById('video_path').addEventListener('change', function() {
+            var fileName = this.files[0].name;
+            document.getElementById('video_file_name').textContent = fileName;
+        });
+
+        document.getElementById('activity_path').addEventListener('change', function() {
+            var fileName = this.files[0].name;
+            document.getElementById('activity_file_name').textContent = fileName;
+        });
+
+        // ฟังก์ชันสำหรับรีเซ็ตฟอร์ม
+        function resetForm() {
+            document.querySelector('form').reset();
+            document.getElementById('video_file_name').textContent = '';
+            document.getElementById('activity_file_name').textContent = '';
+        }
+    </script>
+</body>
+</html>

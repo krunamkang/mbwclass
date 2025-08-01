@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>แบบฝึกหัดจับคู่คำศัพท์กับคำอธิบาย</title>
+  <script src="https://cdn.jsdelivr.net/npm/leader-line"></script>
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: #f0f8ff;
+      padding: 30px;
+      margin: 0;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .instructions {
+      background-color: #dff0ff;
+      padding: 15px;
+      border-left: 5px solid #3399ff;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 300px;
+      position: relative;
+    }
+
+    .column {
+      width: 45%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .item {
+      background: #ffffff;
+      padding: 15px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .item-right {
+      background: #ffffff;
+      padding: 2px;
+      border: 0px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .item:hover {
+      background: #e6f7ff;
+    }
+
+    .selected {
+      background: #c6f1ff;
+      border-color: #3399ff;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 16px;
+      background-color: #3399ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #1e7ec9;
+    }
+
+    .result {
+      margin-top: 25px;
+      font-size: 20px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .item img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>แบบฝึกหัดจับคู่คำศัพท์กับคำอธิบาย</h2>
+
+  <div class="instructions">
+    📌 <strong>คำชี้แจง:</strong> คลิกเลือกคำด้านซ้าย และคลิกรูปด้านขวาที่คิดว่าเหมาะสม  
+    ระบบจะลากเส้นเชื่อมและตรวจคำตอบเมื่อคุณกดปุ่ม <strong>"ตรวจคำตอบ"</strong><br>
+    <small>💡 ใช้ฝึกความเข้าใจพื้นฐานด้านคอมพิวเตอร์</small>
+  </div>
+
+  <div class="container">
+    <div class="column" id="leftColumn">
+      <div class="item" data-id="HTML">HTML</div>
+      <div class="item" data-id="CSS">CSS</div>
+      <div class="item" data-id="JavaScript">JavaScript</div>
+      <div class="item" data-id="Python">Python</div>
+      <div class="item" data-id="Canva">Canva</div>
+    </div>
+
+    <div class="column" id="rightColumn">
+      <div class="item-right" data-id="โปรแกรมออกแบบกราฟิก">
+        <img src={{url_for('static', filename='images/css.png') }}  alt="โปรแกรมออกแบบกราฟิก">
+      </div>
+      <div class="item-right" data-id="ภาษาเขียนโปรแกรม">
+        <img src="images/python.png" alt="ภาษาเขียนโปรแกรม">
+      </div>
+      <div class="item-right" data-id="ควบคุมการทำงานบนเว็บ">
+        <img src={{url_for('static', filename='images/javascript.png') }} alt="ควบคุมการทำงานบนเว็บ">
+      </div>
+      <div class="item-right" data-id="จัดรูปแบบหน้าเว็บ">
+        <img src={{url_for('static', filename='images/css.png') }} alt="จัดรูปแบบหน้าเว็บ">
+      </div>
+      <div class="item-right" data-id="สร้างหน้าเว็บ">
+        <img src="images/html.png" alt="สร้างหน้าเว็บ">
+      </div>
+    </div>
+  </div>
+
+  <form id="scoreForm" action="/add_score" method="POST">
+    <input type="hidden" id="score" name="score" value="{{ 'score' }}">
+    <input type="hidden" name="state" value="{{ 'task' }}"> 
+    <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
+    <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
+
+    <button type="button" onclick="checkAnswers()">✅ ตรวจคำตอบ</button>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    const correctMatches = {
+      "HTML": "สร้างหน้าเว็บ",
+      "CSS": "จัดรูปแบบหน้าเว็บ",
+      "JavaScript": "ควบคุมการทำงานบนเว็บ",
+      "Python": "ภาษาเขียนโปรแกรม",
+      "Canva": "โปรแกรมออกแบบกราฟิก"
+    };
+
+    const lineColors = ['blue', 'red', 'green', 'purple', 'orange'];
+    let selectedLeft = null;
+    let matches = {};
+    let lines = [];
+
+    document.querySelectorAll('#leftColumn .item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('#leftColumn .item').forEach(el => el.classList.remove('selected'));
+        item.classList.add('selected');
+        selectedLeft = item;
+      });
+    });
+
+    document.querySelectorAll('#rightColumn .item-right').forEach(item => {
+      item.addEventListener('click', () => {
+        if (selectedLeft) {
+          const leftId = selectedLeft.getAttribute('data-id');
+          const rightId = item.getAttribute('data-id');
+          matches[leftId] = rightId;
+
+          lines = lines.filter(line => {
+            if (line.leftId === leftId) {
+              line.instance.remove();
+              return false;
+            }
+            return true;
+          });
+
+          const color = lineColors[Object.keys(matches).length - 1];
+          const line = new LeaderLine(selectedLeft, item, {
+            color: color,
+            size: 3,
+            path: 'fluid'
+          });
+
+          lines.push({ leftId, instance: line });
+
+          selectedLeft.classList.remove('selected');
+          selectedLeft = null;
+        }
+      });
+    });
+
+    function checkAnswers() {
+      let score = 0;
+      for (let left in correctMatches) {
+        if (matches[left] === correctMatches[left]) {
+          score++;
+        }
+      }
+
+      document.getElementById('result').innerText = `🎉 คุณได้ ${score} คะแนน จากทั้งหมด 5 คะแนน`;
+      alert(`✅ คำตอบได้ถูกส่งเรียบร้อย\nคุณได้ ${score} คะแนน จากทั้งหมด 5 คะแนน`);
+      document.getElementById('score').value = score;
+      document.getElementById('scoreForm').submit();
+    }
+  </script>
+
+</body>
+</html>

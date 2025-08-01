@@ -1,0 +1,135 @@
+
+    <style>
+        .registration-bigcontainer {
+          
+            display: flex; /* ใช้ flexbox */
+            flex-direction: column; /* แนวตั้ง */
+            align-items: center; /* จัดกลางในแนวนอน */
+            width: 100%;
+     
+        }
+     
+        .registration-container {
+      
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+
+           
+        }
+        .registration-container h2 {
+            text-align: center;
+        }
+        .registration-container select,
+        .registration-container input[type="text"],
+        .registration-container input[type="email"],
+        .registration-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .registration-container button {
+            width: 48%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .register-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .registration-container button:hover {
+            opacity: 0.8;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+    <div class="registration-bigcontainer">
+    <div class="registration-container" >
+        <h2>Register</h2>
+        <form action="/register" method="POST">
+            <label for="title">คำนำหน้าชื่อ:</label>
+            <select id="title" name="title" required>
+                <option value="">เลือกคำนำหน้าชื่อ</option>
+                <option value="เด็กชาย">เด็กชาย</option>
+                <option value="เด็กหญิง">เด็กหญิง</option>
+            </select>
+            
+            <label for="firstname">ชื่อ:</label>
+            <input type="text" id="firstname" name="firstname" placeholder="กรอกชื่อ" required>
+            
+            <label for="lastname">นามสกุล:</label>
+            <input type="text" id="lastname" name="lastname" placeholder="กรอกนามสกุล" required>
+            
+            <label for="student_id">รหัสนักเรียน:</label>
+            <input type="text" id="student_id" name="student_id" placeholder="กรอกรหัสนักเรียน" required>
+            
+            <select id="std_class" name="std_class" required>
+                <option value="">เลือกชั้น</option>
+                <option value="ม.3/1">ม.3/1</option>
+                <option value="ม.3/2">ม.3/2</option>
+                <option value="ม.3/3">ม.3/3</option>
+            </select>
+
+            <label for="std_number">เลขที่:</label>
+            <input type="text" id="std_number" name="std_number" placeholder="กรอกเลขที่" required>
+            
+            <label for="email">อีเมล:</label>
+            <input type="email" id="email" name="email" placeholder="กรอกอีเมล" required>
+            
+            <label for="password">รหัสผ่าน:</label>
+            <input type="password" id="password" name="password" placeholder="กรอกรหัสผ่าน" required minlength="6" title="Password must be at least 6 characters long">
+            
+            <div class="button-group">
+                <button type="reset" class="cancel-btn">ยกเลิก</button>
+                <button type="submit" class="register-btn">สมัครสมาชิก</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function showPopup(message) {
+        let msgText = '';
+        let icon = '';
+    
+        if (message === 'fail') {
+            msgText = "การสมัครไม่สำเร็จ อีเมลหรือรหัสนักเรียนซ้ำ";
+            icon = 'error';
+        } else if (message === 'success') {
+            msgText = "ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว";
+            icon = 'success';
+        } else {
+            return; // ถ้าไม่ใช่ success หรือ fail จะไม่ทำอะไร
+        }
+    
+        Swal.fire({
+            title: "ผลการสมัคร",
+            text: msgText,
+            icon: icon,
+            confirmButtonText: "ตกลง"
+        });
+    }
+    
+    // ดึงค่าพารามิเตอร์จาก URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+    
+    if (message) {
+        showPopup(message);
+    }
+    </script>

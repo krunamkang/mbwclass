@@ -1,0 +1,131 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@700&display=swap');
+.certificate-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* จัดวางเนื้อหาในแนวตั้ง */
+    align-items: center;
+    justify-content: center;
+}
+
+.certificate {
+    max-width: 800px;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    background-color: white;
+}
+
+.certificate img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.certificate-number {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 14px;
+    color: #4b3832;
+}
+
+.recipient-name {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-family: 'Sarabun', sans-serif; /* ใช้ฟอนต์ Sarabun */
+    font-size: 28px; /* ขนาดฟอนต์ */
+    color: #4b3832; /* สีของข้อความ */
+    font-weight: bold; /* ทำให้ข้อความเป็นตัวหนา */
+    text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+}
+
+/* ปุ่มดาวน์โหลดใน container แยกต่างหาก */
+.button-container {
+    margin-top: 20px; /* เว้นระยะห่างระหว่างปุ่มกับภาพ */
+}
+
+.download-button {
+    background-color: #4b3832;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+    background-color: #6b544a;
+}
+.button-container {
+    margin-top: 10px; /* เพิ่มระยะห่างเล็กน้อยระหว่างปุ่มและภาพ */
+}
+.message {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d9534f; /* ใช้สีแดงอ่อนเพื่อความโดดเด่น */
+    text-align: center;
+}
+</style>
+
+{% if progress_status >= 80 %}
+    <div class="certificate-container">
+        <div class="certificate">
+            <img src="{{ url_for('static', filename='images/certificate.png') }}" alt="เกียรติบัตรของคุณ">
+            <div class="recipient-name" id="recipient-name">{{ session.get('user_data', {}).get('firstname') }} {{ session.get('user_data', {}).get('lastname') }}</div>
+        </div>
+        <div class="button-container">
+            <a href="{{ url_for('generate_certificate', firstname=session.get('user_data', {}).get('firstname'), lastname=session.get('user_data', {}).get('lastname')) }}" class="download-button">ดาวน์โหลดเกียรติบัตร</a>
+        </div>
+    </div>
+{% else %}
+    <div class="certificate-container">
+        <span class="message">ยังไม่สามารถดาวน์โหลดได้ เนื่องจากยังเรียนไม่ถึงร้อยละ 80</span>
+    </div>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    const progress = parseInt("{{ progress_status or 0 }}");
+    if (progress >= 80) {
+        showPopup2('success');
+    } else {
+        showPopup2('fail');
+    }
+
+function showPopup2(message) {
+    let msgText2 = '';
+    let icon = '';
+  
+    if (message === 'success') 
+    {
+        msgText2 = "ยินดีคุณผ่านการทดสอบ";
+        icon = 'success';
+    } else {
+
+        msgText2 = "ไม่สามารถดาวน์โหลดเกียรติบัตรได้ ต้องสมัครสมาชิกและเรียนได้คะแนนตั้งแต่ร้อยละ 80 ขึ้นไป";
+        icon = 'error';
+
+
+
+    }
+
+    Swal.fire({
+        title: "เกียรติบัตร online",
+        text: msgText2,
+        icon: icon,
+        confirmButtonText: "ตกลง"
+    });
+}
+
+// ดึงค่าพารามิเตอร์จาก URL
+
+</script>

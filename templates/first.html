@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แสดงภาพ 5steps</title>
+    <style>
+        .course-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+        h1, h3 {
+            margin: 5px; /* ลดระยะห่างบน-ล่าง */
+            line-height: 1; /* ปรับระยะห่างระหว่างบรรทัด */
+        }
+        img {
+          
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body >
+    <div class="course-container">
+    <h1>ยินดีต้อนรับสู่เว็บไซต์เพื่อการเรียนรู้</h1>
+    <h3>การสร้างสื่อนำเสนอด้วยคอมพิวเตอร์กราฟิก</h3>
+
+    <figure>
+        <img src="{{ url_for('static', filename='images/intro.gif') }}"  style="width:70%; height:auto;"  alt="5 Steps Process">
+    </figure>
+    </div>
+</body>
+</html>
