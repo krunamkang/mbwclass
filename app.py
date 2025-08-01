@@ -449,6 +449,8 @@ def submit_comment():
         })
       
         
+
+        
         return redirect(url_for('show_comment', option='option4',lesson_name=lesson_name,lesson_id=lesson_id))
 
 
