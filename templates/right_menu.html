@@ -3,12 +3,12 @@
     .image-list {
       width: 100%;
       margin: 0 auto;
-      padding: 10px;
+      padding: 1px;
     }
 
     .image-list a {
       display: flex;
-      margin-bottom: 5px;
+      margin-bottom: 1px;
     }
 
     .image-list img {
@@ -22,11 +22,24 @@
     .image-list img:hover {
       transform: scale(1.03);
     }
+  .image-list-title {
+  background-color: #bc6969c5;        /* สีพื้นหลังเข้ม */
+  color: #fff;                   /* ตัวอักษรสีขาว */
+  font-size: 22px;
+  font-weight: bold;
+  padding: 12px 20px;
+  margin: 20px 0 10px 0;
+  border-radius: 8px;            /* มุมมน */
+  font-family: 'Sarabun', sans-serif;
+}
+
+
   </style>
 
 
 
   <div class="image-list">
+    <div class="image-list-title">แหล่งเรียนรู้ของเรา</div>
     <a href="https://www.canva.com" target="_blank">
       <img src="{{ url_for('static', filename='images/canva3.png') }}" alt="Image 3">
     </a>

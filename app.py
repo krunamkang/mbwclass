@@ -20,7 +20,6 @@ from google.cloud.firestore_v1.base_query import FieldFilter
 
 app = Flask(__name__)
 cred = credentials.Certificate("/etc/secrets/serviceAccountKey.json")  # เปลี่ยน 'on' เป็นที่อยู่ของไฟล์ที่คุณดาวน์โหลด
-
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -30,6 +29,11 @@ pdfmetrics.registerFont(TTFont("THSarabunBold", "static/fonts/THSarabunBold.ttf"
 
 UPLOAD_FOLDER_TASK = 'static/task'
 app.config['UPLOAD_FOLDER_TASK'] = UPLOAD_FOLDER_TASK
+
+@app.route("/test1")
+def test1():
+    return render_template("test1.html")
+
 
 @app.route('/check_session')
 def check_session():
@@ -766,10 +770,6 @@ def report_pdf():
         mimetype='application/pdf',
         headers={'Content-Disposition': 'attachment;filename=student_scores_report.pdf'}
     )
-
-
-
-
 
 
 

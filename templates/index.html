@@ -4,207 +4,10 @@
 <title>ห้องเรียนครูน้ำค้าง</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-* {
-  box-sizing: border-box;
-}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-/* Style the header */
-
-
-/* Create two columns/boxes that floats next to each other */
-nav {
-  float: left;
-  width: 100%;
-  height: 50px; /* only for demonstration, should be removed */
-  background: #4CAF50;
-  padding: 0px;
-}
-
-/* Style the list inside the menu */
-menu{
-  float: right;
-  padding: 10px;
-  margin: 0px;
-  width: 30%;
-  background-color: #e2baba;
-}
-article {
-  float: left;
-  padding: 20px;
-  width: 70%;
-  background-color: #f1f1f1;
-}
-
-/* Clear floats after the columns */
-section::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Style the footer */
-footer {
-  background-color: #777;
-  padding: 10px;
-  text-align: center;
-  color: white;
-}
-
-/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
-@media (max-width: 600px) {
-  nav, article {
-    width: 100%;
-    height: auto;
-  }
-}
-
-.dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 15px; /* เพิ่ม padding */
-  margin: 0px;
-  border: none; /* ลบเส้นขอบเก่า */
-  border-right: 1px dashed white; /* เส้นขอบขาวด้านขวา */
-  font-size: 20px;
-  cursor: pointer;
-  border-radius: 0;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  background-color: #a29b9b;
-  min-width: 300px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: rgb(255, 255, 255);
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-    /* ป้องกันการเปลี่ยนสีของลิงก์เมื่อคลิก */
-    .dropbtn a:active {
-        color: rgb(124, 118, 118); /* เปลี่ยนเป็นสีที่ต้องการ */
-        text-decoration: none;
-    }
-
-.dropdown-content a:hover {background-color: #c1bbbb;}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #29bb2e;
-}
-
-.sidebar {
-            flex: 1;
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            height: auto;
-            overflow-y: auto;
-            margin: 10px 0;
-        }
-        .sidebar h2 {
-            color: #ffcc00;
-        }
-        /* หัวข้อและหัวข้อย่อย */
-        .lesson {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #444;
-            cursor: pointer;
-        }
-        .lesson:hover {
-            background-color: #555;
-        }
-        .sub-lessons {
-            margin-top: 5px;
-            padding-left: 15px;
-        }
-        .sub-lessons div {
-            margin: 5px 0;
-            background-color: #555;
-            padding: 5px;
-            cursor: pointer;
-        }
-        .sub-lessons div:hover {
-            background-color: #666;
-        }
-
-
-        .breadcrumb {
-    padding: 10px;
-    background-color: #e0e0e0;
-    margin-top: 5px;
-}
-
-.breadcrumb {
-    font-family: "Georgia", serif; /* ใช้ฟอนต์ที่มีสไตล์คลาสสิก */
-    font-size: 16px;
-    color: #4b3832; /* สีน้ำตาลคลาสสิก */
-    background-color: #f8f4f0; /* พื้นหลังสีครีม */
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: inline-block;
-    text-align: left; /* ชิดซ้าย */
-    width: 100%; /* กำหนดความกว้างให้ชิดซ้าย */
-  }
-
-  .breadcrumb span {
-    color: #4b3832;
-  }
-
-  .breadcrumb span:first-child {
-    font-weight: bold;
-  }
-
-  .breadcrumb span:not(:first-child)::before {
-    content: " > ";
-    color: #8e8d8a; /* สีเทาเข้มสำหรับสัญลักษณ์ */
-  }
-
-  .breadcrumb span:last-child {
-    color: #c3a995; /* สีทองอ่อน */
-  }
-
-
-a {
-    text-decoration: none;
-    color: inherit;
-  }
-  
-  /* เปลี่ยนสีพื้นหลังเมื่อ hover */
-  a:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* ใช้สีพื้นหลังที่ต้องการเมื่อ hover */
-  }
-
-  /* เปลี่ยนสีพื้นหลังเมื่อคลิก */
-  a:active {
-    background-color: rgba(0, 0, 0, 0.2); /* ใช้สีพื้นหลังที่ต้องการเมื่อ active */
-  }
-
-
-</style>
-
-{% include 'header.html' %}
 
 </head>
 <body>
@@ -212,26 +15,24 @@ a {
   
 
 <section>
+  {% include 'header.html' %}
   <nav>
-        <div class="dropdown" style="float:left;">
-         <a href="{{ url_for('home',menu='first',nav='หน้าแรก') }}"> <button class="dropbtn">หน้าแรก</button></a>
-         
-        </div>
-        <div class="dropdown" style="float:left;">
-          <button class="dropbtn">เกี่ยวกับรายวิชา</button>
-          <div class="dropdown-content" style="left:0;">
+<div class="topnav" id="myTopnav">
+  <a href="{{ url_for('home',menu='first',nav='หน้าแรก') }}" class="active"> หน้าแรก</a>
+  <div class="dropdown">
+    <button class="dropbtn">เกี่ยวกับรายวิชา
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
             <a href="{{ url_for('showMainMenu',menu='description',nav='คำอธิบายรายวิชา') }}">คำอธิบายรายวิชา</a>
             <a href="{{ url_for('showMainMenu',menu='unit',nav='หน่วยการเรียนรู้') }}">หน่วยการเรียนรู้</a>
-          </div>
-        </div>
-
-
-
-
-        <div class="dropdown" style="float:left;">
-            <button class="dropbtn">บทเรียน</button>
-            <div class="dropdown-content" style="left:0;">
-
+    </div>
+  </div>
+    <div class="dropdown">
+    <button class="dropbtn">บทเรียน
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
             <a href="{{ url_for('showTemplate', lesson_name='แบบทดสอบก่อนเรียน', lesson_id='Pre') }}">แบบทดสอบก่อนเรียน</a>
             <a href="{{ url_for('showTemplate', lesson_name='บทที่ 1 รู้จักกับ CANVA',lesson_id='L1') }}">บทที่ 1 รู้จักกับ CANVA</a>
             <a href="{{ url_for('showTemplate', lesson_name='บทที่ 2 คำสั่งใช้งานพื้นฐาน', lesson_id='L1') }}">บทที่ 2 คำสั่งใช้งานพื้นฐาน</a>
@@ -239,61 +40,48 @@ a {
             <a href="{{ url_for('showTemplate', lesson_name='บทที่ 4 AI กับงานออกแบบ', lesson_id='L1') }}">บทที่ 4 AI กับงานออกแบบ</a>
             <a href="{{ url_for('showTemplate', lesson_name='บทที่ 5 สร้างสื่อนำเสนอเพื่อชุมชน', lesson_id='L1') }}">บทที่ 5 สร้างสื่อนำเสนอเพื่อชุมชน</a>
             <a href="{{ url_for('showTemplate', lesson_name='แบบทดสอบหลังเรียน', lesson_id='Post') }}">แบบทดสอบหลังเรียน</a>
-
-            </div>
-          </div>
-          <div class="dropdown" style="float:left;">
-            <a href="{{ url_for('certificate',nav='ดาวโหลดเกียรติบัตร' )}}">
-              <button class="dropbtn">ดาวน์โหลดเกียรติบัตร</button>
-            </a>
-          </div>
-          <div class="dropdown" style="float:left;">
-            <button class="dropbtn">แหล่งเรียนรู้เพิ่มเติม</button>
-            <div class="dropdown-content" style="left:0;">
+    </div>
+  </div>
+  <a href="{{ url_for('certificate',nav='ดาวโหลดเกียรติบัตร' )}}">ดาวน์โหลดเกียรติบัตร</a>
+  <div class="dropdown">
+    <button class="dropbtn">แหล่งเรียนรู้เพิ่มเติม
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
               <a href="{{ url_for('home') }}">แหล่งเรียนรู้ 1</a>
               <a href="{{ url_for('home') }}">แหล่งเรียนรู้ 2</a>
               <a href="{{ url_for('home') }}">แหล่งเรียนรู้ 3</a>
-            </div>
-          </div>
+    </div>
+  </div>
+    <a href="{{ url_for('showMainMenu',menu='showProfile',nav='ผู้จัดทำ') }}">ผู้จัดทำ</a>
 
-         <div class="dropdown" style="float:left;">
-            <a href="{{ url_for('showMainMenu',menu='showProfile',nav='ผู้จัดทำ') }}"><button class="dropbtn">ผู้จัดทำ</button></a>
-           
-          </div>
-         
-      
- <!--       
-          <div class="dropdown" style="float:left;">
-            <a href="{{ url_for('report_pdf') }}"><button class="dropbtn">ผู้จัดทำ</button></a>
-           
-          </div>
-        -->       
+
+
+
+  
 
           {% if session.get('user_data', {}).get('user_status') == 'teacher' %}
-          <div class="dropdown" style="float:left;">
-            <button class="dropbtn">Admin</button>
-            <div class="dropdown-content" style="left:0;">
+          
+  <div class="dropdown">
+    <button class="dropbtn">Admin
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
             <a href="{{ url_for('showTemplate',lesson_name='pre-post') }}">เพิ่ม Pre-Post test</a>
             <a href="{{ url_for('showTemplate',lesson_name='test') }}">เพิ่มแบบทดสอบประจำบท</a>
             
             <a href="{{ url_for('showTemplate', lesson_name='VideoAct') }}">เพิ่มกิจกรรมและVideo</a>
             <a href="{{ url_for('showTemplate', lesson_name='VideoAct') }}">กรอก-แก้ไขคะแนนกิจกรรม</a>
             <a href="{{ url_for('showTemplate', lesson_name='VideoAct') }}">เรียกดูคะแนน</a>
-            </div>
-          </div>
+    </div>
+  </div>
+          
 
           {% endif %}
-  
+   <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+</div> 
 
 
-          {% if session['user_data'] %}
-          <div class="dropdown" style="float:right;">
-            
-           
-            <button class="dropbtn"><a href="{{ url_for('logout') }}" style="text-decoration: none; color:white" >Log out </a></button> 
-         
-          </div>
-        {% endif %}
   </nav>
   
   <!-- เส้นทาง (Breadcrumb) แสดงด้านล่าง nav -->
@@ -346,6 +134,10 @@ a {
   <menu>
  
     {% if session.get('user_data') %}
+     <div class="right_menu">
+  <a href="{{ url_for('logout') }}" style="color:rgb(90, 28, 28); ">ออกจากระบบ Log out</a>
+  </div>
+
     <div class="progress-container">
       <div class="progress-status">
           ความคืบหน้าการเรียน: {{ session['user_data']['progress_status'] }}%
@@ -382,6 +174,15 @@ a {
 </section>
 
 <script>
+
+  function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
   // JavaScript to change the progress bar width and color
   document.addEventListener("DOMContentLoaded", function() {
       // Initialize the variable with a default value of 0

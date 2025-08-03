@@ -8,7 +8,7 @@
             color: #333;
         }
         .container {
-            width: 60%;
+            width: 100%;
             margin: auto;
             padding: 20px;
             background-color: #ffffff;
@@ -43,10 +43,18 @@
             color: #333;
             font-weight: bold;
         }
+        @media (max-width: 600px) {
+        body  {
+                width: 100%;
+                height: auto;
+    
+             }
+         }
+
     </style>
 
 
-
+<body>
 <div class="container">
     <!-- รูปภาพอยู่กึ่งกลาง -->
     <img src="{{ url_for('static', filename='images/me.jpg') }}" alt="รูปภาพผู้วิจัย" class="profile-image">
@@ -102,4 +110,4 @@
     </table>
 </div>
 
-
+</body>
