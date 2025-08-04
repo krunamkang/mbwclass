@@ -191,12 +191,15 @@ def showTemplate():
             menu_class['lesson_id'] = doc.id  # เพิ่ม lesson_id ลงในข้อมูล
             print("เมนู class id คือ ", menu_class['lesson_id'])
             menu_lesson.append(menu_class)
+
+        videos_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
+        video_data = videos_ref.get().get("video_url") 
+
+
     except Exception as e:
         print("เกิดข้อผิดพลาด:", e)
 
     
-    videos_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
-    video_data = videos_ref.get().get("video_url") 
 
     return render_template('index.html', videos=video_data,Show_Lesson=lesson_name,lesson_name=lesson_name,lesson_id=lesson_id,menu=menu_lesson,subLesson=subLesson)  # ส่งข้อมูลเป็น list
 
