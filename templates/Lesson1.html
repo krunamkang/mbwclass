@@ -79,10 +79,17 @@
     <h1>วิดีโอสาธิต</h1>
     <div class="video-container">
         {% if videos %}
-        <video controls>
-            <source src="{{ url_for('static', filename='videos/'+videos) }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+       <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+        <iframe
+            src="{{ videos }}"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            title="YouTube video player">
+        </iframe>
+</div>
+
     {% else %}
         <p>No video available.</p>
     {% endif %}
@@ -95,6 +102,7 @@
             <button class="tab-button {{ 'active' if option == 'option4' else '' }}" type="submit" name="option" value="option4">ความคิดเห็น</button>
             <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
             <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
+            <input type="hidden" name="subLesson" value="{{ subLesson }}"> 
         </div>
     </form>
 
@@ -103,7 +111,8 @@
             <div id="option1" class="tab-content {{ 'active' if option == 'option1' else '' }}">{% include 'pre-excercise.html' %}</div>
             <div id="option2" class="tab-content {{ 'active' if option == 'option2' else '' }}">{% include 'quiz3.html' %}</div>
             <div id="option3" class="tab-content {{ 'active' if option == 'option3' else '' }}">{% include 'post-excercise.html' %}</div>
-        {% else %}
+        
+            {% else %}
             <div id="option1" class="tab-content {{ 'active' if option == 'option1' else '' }}">ต้อง Login ก่อนทำ แบบทดสอบ</div>
             <div id="option2" class="tab-content {{ 'active' if option == 'option2' else '' }}">ต้อง Login ก่อนทำกิจกรรม</div>
             <div id="option3" class="tab-content {{ 'active' if option == 'option3' else '' }}">ต้อง Login ก่อนทำแบบทดสอบหลังเรียน</div>
@@ -116,6 +125,7 @@
                 <button   type="submit" name="option" value="option4"  onclick="submitComment()"  style="margin-top: 10px; padding: 10px 20px; background-color: #bc96de; color: white; border: none; border-radius: 5px; cursor: pointer;">ส่งความคิดเห็น</button>
                 <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
                 <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
+            <input type="hidden" name="subLesson" value="{{ subLesson }}"> 
                 </form>
             <div id="previous-comments" style="margin-top: 20px;">
                 <h3>ความคิดเห็นก่อนหน้า:</h3>

@@ -87,7 +87,7 @@
                     {% for idx in range(question.choices|length) %}
                     <label>
                         {% set key = 'choice' ~ (idx+1) %}
-                        <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}{{key}}
+                        <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
                     </label>
                     {% if question.img_choices[key] %}
                         {% set img_path = url_for('static', filename='uploads/' ~ question.img_choices[key]) %}

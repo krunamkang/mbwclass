@@ -34,11 +34,9 @@
     </button>
     <div class="dropdown-content">
             <a href="{{ url_for('showTemplate', lesson_name='แบบทดสอบก่อนเรียน', lesson_id='Pre') }}">แบบทดสอบก่อนเรียน</a>
-            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 1 รู้จักกับ CANVA',lesson_id='L1') }}">บทที่ 1 รู้จักกับ CANVA</a>
-            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 2 คำสั่งใช้งานพื้นฐาน', lesson_id='L1') }}">บทที่ 2 คำสั่งใช้งานพื้นฐาน</a>
-            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 3 การแทรกองค์ประกอบในชิ้นงาน', lesson_id='L1') }}">บทที่ 3 การแทรกองค์ประกอบในชิ้นงาน</a>
-            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 4 AI กับงานออกแบบ', lesson_id='L1') }}">บทที่ 4 AI กับงานออกแบบ</a>
-            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 5 สร้างสื่อนำเสนอเพื่อชุมชน', lesson_id='L1') }}">บทที่ 5 สร้างสื่อนำเสนอเพื่อชุมชน</a>
+            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 1 รู้จักกับ CANVA',lesson_id='L1',subLesson='ข้อมูลทั่วไปของ CANVA') }}">บทที่ 1 รู้จักกับ CANVA</a>
+            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 2 ก้าวแรกสู่การออกแบบ', lesson_id='L1') }}">บทที่ 2 ก้าวแรกสู่การออกแบบ</a>
+            <a href="{{ url_for('showTemplate', lesson_name='บทที่ 3 สื่อสร้างสรรค์ด้วยพลัง AI', lesson_id='L1') }}">บทที่ 3 สื่อสร้างสรรค์ด้วยพลัง AI</a>
             <a href="{{ url_for('showTemplate', lesson_name='แบบทดสอบหลังเรียน', lesson_id='Post') }}">แบบทดสอบหลังเรียน</a>
     </div>
   </div>
@@ -67,13 +65,15 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-            <a href="{{ url_for('showTemplate',lesson_name='pre-post') }}">เพิ่ม Pre-Post test</a>
-            <a href="{{ url_for('showTemplate',lesson_name='test') }}">เพิ่มแบบทดสอบประจำบท</a>
+            <a href="{{ url_for('showTemplateAdmin',menu_admin='pre-post') }}">เพิ่ม Pre-Post test</a>
+            <a href="{{ url_for('showTemplateAdmin',menu_admin='test') }}">เพิ่มแบบทดสอบประจำบท</a>
             
-            <a href="{{ url_for('showTemplate', lesson_name='VideoAct') }}">เพิ่มกิจกรรมและVideo</a>
-            <a href="{{ url_for('showTemplate', lesson_name='VideoAct') }}">กรอก-แก้ไขคะแนนกิจกรรม</a>
-            <a href="{{ url_for('showTemplate', lesson_name='VideoAct') }}">เรียกดูคะแนน</a>
-    </div>
+            <a href="{{ url_for('showTemplateAdmin', menu_admin='VideoAct') }}">เพิ่มกิจกรรมและVideo</a>
+            <a href="{{ url_for('showTemplateAdmin', menu_admin='VideoAct') }}">กรอก-แก้ไขคะแนนกิจกรรม</a>
+            <a href="{{ url_for('showTemplateAdmin', menu_admin='VideoAct') }}">เรียกดูคะแนน</a>
+            <a href="{{ url_for('showTemplateAdmin', menu_admin='subLesson') }}">เพิ่มหัวข้อย่อยของบทเรียน</a>
+
+          </div>
   </div>
           
 
@@ -93,8 +93,8 @@
     {% if lesson_name %}
     <span>{{ lesson_name }}</span>
     {% endif %}
-    {% if menutopic_name %}
-    <span>{{ menutopic_name }}</span>
+    {% if subLesson %}
+    <span>{{ subLesson }}</span>
     {% endif %}
   </div>
 
@@ -155,8 +155,8 @@
         <div class="sub-lessons">
           {% for menu_lesson in menu %}
           <div>
-            <a href="{{ url_for('showTemplate', lesson_name=lesson_name, lesson_id=menu_lesson.lesson_id, menutopic_name=menu_lesson.topic_name) }}">
-              {{ menu_lesson.topic_name }}
+            <a href="{{ url_for('showTemplate', lesson_name=lesson_name, lesson_id=menu_lesson.lesson_id, subLesson=menu_lesson.subLesson) }}">
+              {{ menu_lesson.subLesson }}
             </a>
           </div>
           {% endfor %}

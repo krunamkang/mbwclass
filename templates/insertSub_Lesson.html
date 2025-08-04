@@ -85,7 +85,7 @@
             </div>
         </form>
         <h2>Insert Question Data</h2>
-        <form action="/insert_question_data" method="POST" enctype="multipart/form-data">
+        <form action="/insert_subLesson" method="POST" enctype="multipart/form-data">
             <label for="lesson_name">Lesson Name:</label>
             <select id="lesson_name" name="lesson_name" required>
                 <option value="">Select a Lesson Name</option>
@@ -106,52 +106,10 @@
                 <!-- เพิ่มตัวเลือกเพิ่มเติมได้ที่นี่ -->
             </select><br>
 
-            <label for="question_id">Question ID:</label>
-            <select id="question_id" name="question_id" required>
-                <option value="">Select a Question ID</option>
-                <option value="Q01">ข้อ 1</option>
-                <option value="Q02">ข้อ 2</option>
-                <option value="Q03">ข้อ 3</option>
-                <option value="Q04">ข้อ 4</option>
-                <option value="Q05">ข้อ 5</option>
-                <option value="Q06">ข้อ 6</option>
-                <option value="Q07">ข้อ 7</option>
-                <option value="Q08">ข้อ 8</option>
-                <option value="Q09">ข้อ 9</option>
-                <option value="Q10">ข้อ 10</option>
+  
+            <label for="question_text">ชื่อหัวข้อย่อย :</label>
+            <input type="text" id="SubLesson" name="SubLesson" required><br>
 
-
-                <!-- เพิ่มตัวเลือกเพิ่มเติมได้ที่นี่ -->
-            </select><br>
-
-
-            <label for="question_text">คำถาม :</label>
-            <input type="text" id="question_text" name="question_text" required><br>
-
-            <label for="img_question">ภาพสำหรับคำถาม :</label>
-            <input type="file" id="img_question" name="img_question" accept="image/*"><br>
-
-            <label>Choices:</label>
-            <div class="choice-container">
-                <input type="radio" id="choice1" name="selected_choice" value="choice1">
-                <input type="text" name="choice1" placeholder="Choice 1" required>
-                <input type="file" name="img_choice1" accept="image/*">
-            </div>
-            <div class="choice-container">
-                <input type="radio" id="choice2" name="selected_choice" value="choice2">
-                <input type="text" name="choice2" placeholder="Choice 2" required>
-                <input type="file" name="img_choice2" accept="image/*">
-            </div>
-            <div class="choice-container">
-                <input type="radio" id="choice3" name="selected_choice" value="choice3">
-                <input type="text" name="choice3" placeholder="Choice 3" required>
-                <input type="file" name="img_choice3" accept="image/*">
-            </div>
-            <div class="choice-container">
-                <input type="radio" id="choice4" name="selected_choice" value="choice4">
-                <input type="text" name="choice4" placeholder="Choice 4" required>
-                <input type="file" name="img_choice4" accept="image/*">
-            </div>
 
             <button type="submit">Submit Question Data</button>
         </form>

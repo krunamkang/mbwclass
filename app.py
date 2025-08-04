@@ -16,7 +16,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import fonts
 from google.cloud.firestore_v1.base_query import FieldFilter
-
+import random 
 
 app = Flask(__name__)
 cred = credentials.Certificate("/etc/secrets/serviceAccountKey.json")  # เปลี่ยน 'on' เป็นที่อยู่ของไฟล์ที่คุณดาวน์โหลด
@@ -167,8 +167,6 @@ def showMenu():
 
     return render_template('index.html',menu=menu)  # ส่งกลับไปที่หน้าเดิมหลังจากบันทึกข้อมูล
 
-
-
 @app.route('/showTemplat', methods=['GET','POST'])
 def showTemplate():
   
@@ -176,6 +174,8 @@ def showTemplate():
     menutopic_name = request.args.get('menutopic_name')
     lesson_name= request.args.get('lesson_name')
     lesson_id= request.args.get('lesson_id')
+    subLesson=request.args.get('subLesson')
+
 
     menu_lesson = []  # สร้าง List เพื่อเก็บข้อมูลแต่ละ Document
     
@@ -189,22 +189,37 @@ def showTemplate():
            
             menu_class = doc.to_dict()
             menu_class['lesson_id'] = doc.id  # เพิ่ม lesson_id ลงในข้อมูล
-            print( menu_class['lesson_id'])
+            print("เมนู class id คือ ", menu_class['lesson_id'])
             menu_lesson.append(menu_class)
     except Exception as e:
         print("เกิดข้อผิดพลาด:", e)
 
-    if lesson_name=='test':
-        return render_template('insertdata.html')
-    if lesson_name=='VideoAct':
-        return render_template('insertVideoAc.html')
-    if lesson_name=='pre-post':
-        return render_template('prepostTest.html')
     
     videos_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
-    video_data = videos_ref.get().get("video_path") 
+    video_data = videos_ref.get().get("video_url") 
 
-    return render_template('index.html', videos=video_data,Show_Lesson=lesson_name,lesson_name=lesson_name,lesson_id=lesson_id,menu=menu_lesson,menutopic_name=menutopic_name)  # ส่งข้อมูลเป็น list
+    return render_template('index.html', videos=video_data,Show_Lesson=lesson_name,lesson_name=lesson_name,lesson_id=lesson_id,menu=menu_lesson,subLesson=subLesson)  # ส่งข้อมูลเป็น list
+
+
+
+@app.route('/showTemplatAdmin', methods=['GET','POST'])
+def showTemplateAdmin():
+  
+    menu_admin= request.args.get('menu_admin')
+
+
+
+    if menu_admin=='test':
+        return render_template('insertdata.html')
+    if menu_admin=='VideoAct':
+        return render_template('insertVideoAc.html')
+    if menu_admin=='pre-post':
+        return render_template('prepostTest.html')
+    if menu_admin=='subLesson':
+        return render_template('insertSub_Lesson.html')
+    
+
+    return render_template('index.html')  # ส่งข้อมูลเป็น list
 
 
 
@@ -239,6 +254,26 @@ def insert_prepostTest():
     })
 
     return render_template('prepostTest.html')  # ส่งกลับไปที่หน้า index หลังจากบันทึกข้อมูล
+
+@app.route('/insert_subLesson', methods=['POST'])
+def insert_subLesson():
+   
+    lesson_name = request.form['lesson_name']
+    lesson_id = request.form['lesson_id']
+    SubLesson = request.form['SubLesson']
+    
+
+   
+
+    # บันทึกข้อมูลคำถาม
+    lesson_ref = db.collection(lesson_name).document(lesson_id).update({
+        "subLesson": SubLesson,
+       
+    })
+
+
+    return render_template('insertSub_Lesson.html')  # ส่งกลับไปที่หน้า index หลังจากบันทึกข้อมูล
+
 
 
 @app.route('/insert_question_data', methods=['POST'])
@@ -312,36 +347,21 @@ def insert_video_data():
     lesson_name = request.form['lesson_name']
     lesson_id = request.form['lesson_id']
     topic_name = request.form['topic_name']
-    video_name = request.form['video_name']
+    video_url = request.form['video_url']
     activity_name = request.form['activity_name']
 
-    # อัปโหลดไฟล์วิดีโอ
-    video_file = request.files['video_path']
-    video_filename = secure_filename(video_file.filename)
+  
     
     # อัปโหลดไฟล์กิจกรรม
     activity_file = request.files['activity_path']
     activity_filename = secure_filename(activity_file.filename)
 
 
-
-
-   
-    """"
-    lesson_ref = db.collection(lesson_name).document(lesson_id).collection('video_comment').document(video_name)
-    lesson_ref.set({
-        "timestamp": "",
-        "user_id": "",
-        "video_name":video_name
-        
-      
-    })
-    """
     lesson_ref = db.collection(lesson_name).document(lesson_id)
-    lesson_ref.set({
-        "topic_name": topic_name,
-        "video_name": video_name,
-        "video_path": video_filename,
+    lesson_ref.update({
+      
+        "video_name": topic_name,
+        "video_url": video_url,
         "activity_name": activity_name,
         "activity_path": activity_filename
     })
@@ -356,7 +376,31 @@ def show_comment():
     option = request.args.get('option')  # รับค่าจากตัวแปร 'option'
     lesson_name = request.args.get('lesson_name')
     lesson_id = request.args.get('lesson_id')
+    subLesson = request.args.get('subLesson')
     print("ค่า option",option)
+
+    menu_lesson = []  # สร้าง List เพื่อเก็บข้อมูลแต่ละ Document
+    
+    # ดึงข้อมูลทั้งหมดจาก Collection โดยไม่ระบุ Document ID
+    menu_ref = db.collection(lesson_name)
+    
+    
+    menu_lesson = []  # สร้าง List เพื่อเก็บข้อมูลแต่ละ Document
+    
+    # ดึงข้อมูลทั้งหมดจาก Collection โดยไม่ระบุ Document ID
+    menu_ref = db.collection(lesson_name)
+    
+    menus = menu_ref.stream()
+    for doc in menus:
+            # แปลงข้อมูลของ Document เป็น Dictionary และเก็บใน List
+        menu_class = doc.to_dict()
+        menu_class['lesson_id'] = doc.id  # เพิ่ม lesson_id ลงในข้อมูล
+        print( menu_class['lesson_id'])
+        menu_lesson.append(menu_class)
+        
+
+
+
     if option == 'option1':
         # ทำบางอย่างสำหรับแบบทดสอบก่อนเรียน
         questions = []
@@ -375,19 +419,19 @@ def show_comment():
                 'answer': question_data.get('answer', '')  # ค่าตั้งต้นเมื่อไม่มีคำตอบ
             })
         videos_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
-        video_data = videos_ref.get().get("video_path") 
+        video_data = videos_ref.get().get("video_url") 
 
         # ส่งข้อมูลไปยัง HTML
-        return render_template('index.html', questions=questions,option=option,lesson_name=lesson_name,lesson_id=lesson_id,videos=video_data)
+        return render_template('index.html', questions=questions,option=option,lesson_name=lesson_name,lesson_id=lesson_id,subLesson=subLesson,videos=video_data,menu=menu_lesson)
     
         pass
     elif option == 'option2':
         activity_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
         activity_data = activity_ref.get().get("activity_name") 
         videos_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
-        video_data = videos_ref.get().get("video_path") 
+        video_data = videos_ref.get().get("video_url") 
 
-        return render_template('index.html', option=option,lesson_name=lesson_name,lesson_id=lesson_id,videos=video_data,activity_data=activity_data)
+        return render_template('index.html', option=option,lesson_name=lesson_name,lesson_id=lesson_id,videos=video_data,activity_data=activity_data,subLesson=subLesson,menu=menu_lesson)
 
         pass
     elif option == 'option3':
@@ -407,11 +451,13 @@ def show_comment():
                 'img_choices': question_data.get('img_choices', []),  # ตรวจสอบให้แน่ใจว่าตั้งค่าเป็น list
                 'answer': question_data.get('answer', '')  # ค่าตั้งต้นเมื่อไม่มีคำตอบ
             })
+
+        random.shuffle(questions)
         videos_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
-        video_data = videos_ref.get().get("video_path") 
+        video_data = videos_ref.get().get("video_url") 
 
         # ส่งข้อมูลไปยัง HTML
-        return render_template('index.html', questions=questions,option=option,lesson_name=lesson_name,lesson_id=lesson_id,videos=video_data)
+        return render_template('index.html', questions=questions,option=option,lesson_name=lesson_name,lesson_id=lesson_id,videos=video_data,subLesson=subLesson,menu=menu_lesson)
 
 
         pass
@@ -422,12 +468,12 @@ def show_comment():
 
 
         videos_ref = db.collection(lesson_name).document(lesson_id)  # เข้าถึง Document ของ Lesson
-        video_data = videos_ref.get().get("video_path") 
+        video_data = videos_ref.get().get("video_url") 
 
-        return render_template('index.html',comments=comment_list,option=option,lesson_name=lesson_name,lesson_id=lesson_id,videos=video_data)
+        return render_template('index.html',comments=comment_list,option=option,lesson_name=lesson_name,lesson_id=lesson_id,videos=video_data,subLesson=subLesson,menu=menu_lesson)
         pass
     
-    return render_template('index.html',option=option)
+    return render_template('index.html',option=option,lesson_name=lesson_name,lesson_id=lesson_id,subLesson=subLesson,menu=menu_lesson)
 
 
 @app.route('/submit_comment', methods=['POST','GET'])
