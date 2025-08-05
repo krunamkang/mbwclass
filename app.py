@@ -19,7 +19,12 @@ from google.cloud.firestore_v1.base_query import FieldFilter
 import random 
 
 app = Flask(__name__)
-cred = credentials.Certificate("/etc/secrets/serviceAccountKey.json")  # เปลี่ยน 'on' เป็นที่อยู่ของไฟล์ที่คุณดาวน์โหลด
+if os.path.exists("/etc/secrets/serviceAccountKey.json"):
+    cred_path = "/etc/secrets/serviceAccountKey.json"
+else:
+    cred_path = "./etc/secrets/serviceAccountKey.json"
+
+cred = credentials.Certificate(cred_path)  # เปลี่ยน 'on' เป็นที่อยู่ของไฟล์ที่คุณดาวน์โหลด
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -69,7 +74,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 def add_score():
    
     user_id = session.get('user_data', {}).get('student_id')  # ดึง user_id จาก session
-    
+    print("user id ",user_id)
     if not user_id:
         return "User not logged in", 403
     
@@ -269,7 +274,7 @@ def insert_subLesson():
    
 
     # บันทึกข้อมูลคำถาม
-    lesson_ref = db.collection(lesson_name).document(lesson_id).update({
+    lesson_ref = db.collection(lesson_name).document(lesson_id).set({
         "subLesson": SubLesson,
        
     })
@@ -593,10 +598,14 @@ def login_with_email_password(email, password):
             # เพิ่มข้อมูล user_info ลงใน user_data
             user_data['firstname'] = user_info['firstname']
             user_data['lastname'] = user_info['lastname']
-            if user_info['user_status']=='student':
+            '''if user_info['user_status']=='student':
                 user_data['std_class'] = user_info['std_class']
                 user_data['student_id'] = user_info['student_id']
                 user_data['progress_status'] = user_info['progress_status']
+            user_data['user_status'] = user_info['user_status']'''
+            user_data['std_class'] = user_info['std_class']
+            user_data['student_id'] = user_info['student_id']
+            user_data['progress_status'] = user_info['progress_status']
             user_data['user_status'] = user_info['user_status']
             print("ให้แสดง ",user.id, user.to_dict())
         print("ส่วน 4")          

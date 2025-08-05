@@ -7,8 +7,8 @@
     <style>
         .containerex {
             max-width: 100%;
-            margin: 0px auto;
-            padding: 20px;
+            margin: 0px 0px;
+            padding: 2px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -28,28 +28,21 @@
             font-size: 18px;
             color: #555;
         }
-        .question-image {
-            width: 30%;
-            height: auto;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        .option-image {
-            width: 15%;
-            height: auto;
-            margin-top: 5px;
-            display: block;
-            margin-left: 30px;
-        }
+       
         label {
-            display: block;
-            margin: 10px 0;
+            display: flex;                  /* เปลี่ยนจาก block เป็น flex */
+            align-items: center;           /* จัดให้ข้อความอยู่ระดับเดียวกับ radio */
+            gap: 5px;                      /* ระยะห่างระหว่าง radio กับข้อความ */
             font-size: 16px;
             color: #444;
+            margin: 5px 0;
+            padding: 3px;
         }
         input[type="radio"] {
-            margin-right: 10px;
+                margin: 0; /* เอา margin เดิมออก */
+                transform: scale(1.1); /* ขยายปุ่ม radio เล็กน้อยหากต้องการ */
         }
+        
         button {
             display: block;
             width: 100%;
@@ -66,11 +59,50 @@
         button:hover {
             background-color: #45a049;
         }
+.options-flex {
+    display: flex;
+    flex-wrap: wrap;         /* ให้ขึ้นบรรทัดใหม่เมื่อเต็มแถว */
+    gap: 2px;               /* ระยะห่างระหว่างช่อง */
+    margin-top: 10px;
+}
+
+.option-box {
+    flex: 0 1 calc(50% - 3px);  /* 2 คอลัมน์ */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1px;
+    background-color: #fdfdfd;
+}
+.option-box img {
+    display: block;
+    margin-left: 24px;  /* ❗ เยื้องขวามากขึ้น */
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 80px;
+    max-width: 100%;
+}
+.option-box2 {
+    
+    flex: 0 0 100%;              /* กำหนดความกว้างประมาณ 2 ช่อง */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1px;
+    background-color: #fdfdfd;
+    min-width: 200px;          /* ป้องกันเล็กเกินไป */}
+
+.option-box.selected,
+.option-box2.selected {
+    background-color: #4eee4e88;  /* สีเขียวอ่อนเมื่อถูกเลือก */
+    border-color: #f5f0ef;
+}        
+        
     </style>
 </head>
 <body>
     <div class="containerex">
-        <h1>แบบสอบถามหลังเรียน</h1>
+        <h1>แบบสอบถาม</h1>
         <h1>Lesson: {{ lesson_name }}</h1>
         <p>Lesson ID: {{ lesson_id }}</p>
         <form action="/add_score" method="POST">
@@ -79,31 +111,67 @@
                     <h2>ข้อที่ {{ loop.index }} : {{ question.question_text }}</h2>
                     {% if question.img_question %}
                         <div style="text-align: center;">
-                           
-                            <img src="{{ question.img_question }}" alt="Question Image" class="question-image" onerror="this.style.display='none'">
+                        {% set q_path = url_for('static', filename='uploads/' ~ question.img_question) %}
+       
+                            <img src="{{ q_path }}" alt="Question Image" style="width: 80%; max-width: 200px;" onerror="this.style.display='none'">
                         </div>
                     {% endif %}
-
-                    {% for idx in range(question.choices|length) %}
-                    <label>
-                        {% set key = 'choice' ~ (idx+1) %}
-                        <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
-                    </label>
-                    {% if question.img_choices[key] %}
-                        {% set img_path = url_for('static', filename='uploads/' ~ question.img_choices[key]) %}
-                        <img src="{{ img_path }}" alt="Option Image" class="option-image" onerror="this.style.display='none'">
-                    {% endif %}
-                {% endfor %}
+                   
+                            <div class="options-flex">
+                                {% for idx in range(question.choices|length) %}
+                                    {% set key = 'choice' ~ (idx+1) %}
+                                    {% if question.img_choices[key] %}
+                                    
+                                    <div class="option-box">
+                                        <label>
+                                            <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
+                                        </label>
+                                        {% if question.img_choices[key] %}
+                                            {% set img_path = url_for('static', filename='uploads/' ~ question.img_choices[key]) %}
+                                            <img src="{{ img_path }}" alt="Option Image" onerror="this.style.display='none'">
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% else%}
+                                   <div class="option-box2">
+                                    <label>
+                                        <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
+                                    </label>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                            </div>     
+                      
+                </div>                
                 
-                </div>
+                
             {% endfor %}
             <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
             <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
-            <input type="hidden" name="state" value="{{ 'post' }}"> 
-        
+            <input type="hidden" name="state" value="{{ 'pre' }}"> 
             <button type="submit">ส่งคำตอบ</button>
         </form>
         
     </div>
+
+    <script>
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const name = this.name;
+
+            // ลบคลาส selected ออกจากตัวเลือกทั้งหมดในกลุ่มเดียวกัน
+            document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+                input.closest('.option-box')?.classList.remove('selected');
+                input.closest('.option-box2')?.classList.remove('selected');
+            });
+
+            // เพิ่มคลาส selected ให้ตัวที่ถูกเลือก
+            const box = this.closest('.option-box') || this.closest('.option-box2');
+            box?.classList.add('selected');
+        });
+    });
+</script>
+
 </body>
 </html>
