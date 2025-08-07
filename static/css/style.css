@@ -307,4 +307,35 @@ a {
     background-color: rgba(0, 0, 0, 0.2); /* ใช้สีพื้นหลังที่ต้องการเมื่อ active */
   }
 
+  .sub-number {
+    background-color: #333; /* สีเข้ม */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+  }
 
+.sub-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.number {
+  background-color: #333;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-right: 10px;
+  flex-shrink: 0; /* ป้องกันหมายเลขยืด */
+}
+
+.sub-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #000;
+  line-height: 1.4;
+}

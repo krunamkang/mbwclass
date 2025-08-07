@@ -154,12 +154,27 @@
       <div class="lesson">{{lesson_name}}
         <div class="sub-lessons">
           {% for menu_lesson in menu %}
-          <div>
-            <a href="{{ url_for('showTemplate', lesson_name=lesson_name, lesson_id=menu_lesson.lesson_id, subLesson=menu_lesson.subLesson) }}">
-              {{ menu_lesson.subLesson }}
-            </a>
-          </div>
-          {% endfor %}
+            <div class="sub-item">
+              <span class="number">{{ loop.index }}</span>
+
+
+              <a class="sub-link" href="{{ url_for('showTemplate', lesson_name=lesson_name, lesson_id=menu_lesson.lesson_id, subLesson=menu_lesson.subLesson) }}">
+                  {% if menu_lesson.subLesson == "ปราสาทตำหนักไทร มรดกล้ำค่าแห่งชุมชนบักดอง : ตอนที่ 1 AI เล่าเรื่อง" %}
+                    ปราสาทตำหนักไทร<br>
+                    มรดกล้ำค่าแห่งชุมชนบักดอง<br>
+                    ตอนที่ 1 AI เล่าเรื่อง
+                  {% elif menu_lesson.subLesson == "ปราสาทตำหนักไทร มรดกล้ำค่าแห่งชุมชนบักดอง : ตอนที่ 2 AI นักกวี" %}       
+                    ปราสาทตำหนักไทร<br>
+                    มรดกล้ำค่าแห่งชุมชนบักดอง<br>
+                    ตอนที่ 2 AI นักกวี
+
+                  {% else %}
+                    <div>{{ menu_lesson.subLesson }}</div>
+                  {% endif %}
+
+              </a>
+            </div>            
+            {% endfor %}
         </div>
       </div>
     </div>
