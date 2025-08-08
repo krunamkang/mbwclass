@@ -51,7 +51,7 @@ footer {
 }
 
 /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   nav, article,menu {
     width: 100%;
     height: auto;
@@ -143,7 +143,7 @@ footer {
 }
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
   .topnav a:not(:first-child), .dropdown .dropbtn {
     display: none;
   }
@@ -190,7 +190,7 @@ footer {
 
 
 /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 900px) {
   .topnav.responsive {position: relative;}
   .topnav.responsive a.icon {
     position: absolute;

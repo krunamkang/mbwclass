@@ -19,6 +19,8 @@
     }
 
     .tabs {
+        margin-top: 2px !important;
+        margin-bottom: 0px !important;
         display: flex;
         justify-content: space-between;
         margin: 20px 0;
@@ -27,7 +29,9 @@
     }
 
     .tab-button {
-        background-color: #12d87f;
+        margin-top: 0px !important;
+
+        background-color: #09c91f;
         color: white;
         flex: 1;
         text-align: center;
@@ -45,7 +49,7 @@
     }
 
     .tab-button.active {
-        background-color: #c6c447;
+        background-color: #3aeb75d3;
         color: white;
         font-weight: bold;
     }
@@ -55,8 +59,11 @@
     }
 
     .tab-content {
-        padding: 10px;
-        border: 1px solid #12d87f;
+        background-color: #f5f8f6d3;
+        color: rgb(60, 58, 58);
+        margin-top: 0px !important;
+        padding: 5px;
+        
         border-radius: 5px;
         margin-top: 10px;
         display: none; /* ซ่อนเนื้อหาทั้งหมดเริ่มต้น */
@@ -69,25 +76,47 @@
     .comment-item {
         background: #f9f9f9;
         border: 1px solid #ccc;
-        padding: 10px;
+        padding: 5px !important;
         margin-top: 5px;
         border-radius: 5px;
     }
+    .video-container {
+  
+    margin-bottom: 0 !important;
+}
+.video-wrapper {
+    position: relative;
+    width: 95%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 </style>
 
 <div class="containerles ">
     <h1>วิดีโอสาธิต</h1>
-    <div class="video-container">
-        {% if videos %}
-       <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+<div class="video-container">
+    {% if videos %}
+    <div class="video-wrapper">
         <iframe
             src="{{ videos }}"
-            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
             title="YouTube video player">
         </iframe>
+    </div>
+ 
 </div>
 
     {% else %}
@@ -106,7 +135,7 @@
         </div>
     </form>
 
-    <div class="content">
+    <div class="containerles">
         {% if session['user_data'] %}
             <div id="option1" class="tab-content {{ 'active' if option == 'option1' else '' }}">{% include 'pre-excercise.html' %}</div>
             <div id="option2" class="tab-content {{ 'active' if option == 'option2' else '' }}">{% include 'quiz3.html' %}</div>

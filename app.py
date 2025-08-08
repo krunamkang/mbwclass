@@ -110,6 +110,8 @@ def add_score():
             score_add='prescore'
         elif state=='post':
             score_add='postscore'
+        elif state=='test':
+            score_add='testcore'
         else:
             score = request.form.get('score')
             score_add='task'
@@ -172,14 +174,15 @@ def showMenu():
 
     return render_template('index.html',menu=menu)  # ส่งกลับไปที่หน้าเดิมหลังจากบันทึกข้อมูล
 
+
 @app.route('/showTemplat', methods=['GET','POST'])
 def showTemplate():
-  
-    
+   
     menutopic_name = request.args.get('menutopic_name')
     lesson_name= request.args.get('lesson_name')
     lesson_id= request.args.get('lesson_id')
     subLesson=request.args.get('subLesson')
+    
 
 
     menu_lesson = []  # สร้าง List เพื่อเก็บข้อมูลแต่ละ Document
@@ -206,7 +209,7 @@ def showTemplate():
 
     
 
-    return render_template('index.html', videos=video_data,Show_Lesson=lesson_name,lesson_name=lesson_name,lesson_id=lesson_id,menu=menu_lesson,subLesson=subLesson)  # ส่งข้อมูลเป็น list
+    return render_template('index.html',videos=video_data,Show_Lesson=lesson_name,lesson_name=lesson_name,lesson_id=lesson_id,menu=menu_lesson,subLesson=subLesson)  # ส่งข้อมูลเป็น list
 
 
 
@@ -222,7 +225,7 @@ def showTemplateAdmin():
     if menu_admin=='VideoAct':
         return render_template('insertVideoAc.html')
     if menu_admin=='pre-post':
-        return render_template('prepostTest.html')
+        return render_template('insertTest.html')
     if menu_admin=='subLesson':
         return render_template('insertSub_Lesson.html')
     
@@ -345,6 +348,66 @@ def insert_question_data():
             print("upload ไฟล์แล้ว")
 
     return render_template('insertdata.html')  # ส่งกลับไปที่หน้า index หลังจากบันทึกข้อมูล
+
+
+# insert Test
+@app.route('/insert_test', methods=['POST'])
+def insert_test():
+   
+    
+    question_id = request.form['question_id']
+    question_text = request.form['question_text']
+    img_question = request.files.get('img_question').filename
+    choices = {
+        'choice1':request.form['choice1'],
+        'choice2':request.form['choice2'],
+        'choice3':request.form['choice3'],
+        'choice4':request.form['choice4']
+    }
+    img_choices = {
+        'choice1':request.files.get('img_choice1').filename,
+        'choice2':request.files.get('img_choice2').filename,
+        'choice3':request.files.get('img_choice3').filename,
+        'choice4':request.files.get('img_choice4').filename
+    }
+
+    selected_choice = request.form.get('selected_choice')
+    print( selected_choice)
+    answer = selected_choice
+
+    # สร้าง Document ของ Lesson
+    db.collection("question").document(question_id).set({
+        "question_text": question_text,
+        "img_question": img_question,
+        "choices": choices,
+        "img_choices": img_choices,
+        "answer": answer
+    })
+
+    
+    # รับไฟล์จากฟอร์ม
+    img_files = {
+        'img_choice1': request.files.get('img_choice1'),
+        'img_choice2': request.files.get('img_choice2'),
+        'img_choice3': request.files.get('img_choice3'),
+        'img_choice4': request.files.get('img_choice4'),
+        'img_question' : request.files.get('img_question', '')
+    }
+
+        # เก็บพาธไฟล์ที่อัปโหลด
+    saved_files = {}
+
+    for key, file in img_files.items():
+        print("เข้าสู่้การ upload file is ",file)
+        print("เข้าสู่้การ upload file is ",file.filename)
+        if file and file.filename:  # ตรวจสอบว่ามีไฟล์ถูกอัปโหลด
+            filename = file.filename
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)  # บันทึกไฟล์ลงโฟลเดอร์
+            saved_files[key] = file_path  # บันทึกพาธไฟล์
+            print("upload ไฟล์แล้ว")
+
+    return render_template('insertTest.html')  # ส่งกลับไปที่หน้า index หลังจากบันทึกข้อมูล
 
 def increment_video_id(current_value):
     return (current_value or 0) + 1
@@ -560,10 +623,31 @@ def home():
     menu='first'
     return render_template('index.html',menu=menu,nav=nav)
 
+
 @app.route('/showMainMenu', methods=['GET', 'POST'])
 def showMainMenu():
     menu= request.args.get('menu')
     nav= request.args.get('nav')
+    if menu=='preTest':
+        questions = []
+        docs = db.collection('question').stream()
+        print("abc")
+        for doc in docs:
+            
+            question_data = doc.to_dict()
+            print("ค่า doc id",doc.id)
+            questions.append({
+                'id': doc.id,
+                'question_text': question_data.get('question_text', 'ไม่มีคำถาม'),
+                'img_question': question_data.get('img_question', ''),
+                'choices': question_data.get('choices', {}),  # ตรวจสอบให้แน่ใจว่าตั้งค่าเป็น list
+                'img_choices': question_data.get('img_choices', {}),  # ตรวจสอบให้แน่ใจว่าตั้งค่าเป็น list
+                'answer': question_data.get('answer', '')  # ค่าตั้งต้นเมื่อไม่มีคำตอบ
+            })
+
+        # ส่งข้อมูลไปยัง HTML
+        return render_template('index.html', questions=questions,nav=nav,menu=menu)
+
     return render_template('index.html',nav=nav,menu=menu)
 
 

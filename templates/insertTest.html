@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Question Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f5;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            width: 30%;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        .button-group-right {
+        text-align: right;
+        margin-bottom: 10px;
+        }
+        .choice-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    input[type="radio"] {
+        width: 16px; /* ปรับขนาดให้เล็กลง */
+        height: 16px;
+        margin-right: 8px; /* เพิ่มช่องว่างระหว่าง radio กับ input text */
+    }
+
+    input[type="text"] {
+        flex-grow: 1; /* ขยายให้กว้างขึ้นเต็มพื้นที่ที่เหลือ */
+        padding: 5px;
+        font-size: 16px;
+    }
+
+    input[type="file"] {
+        margin-left: 10px; /* เว้นระยะจาก input text */
+    }
+    </style>
+</head>
+<body>
+    <h1>Insert Question Data</h1>
+
+    <!-- Form Section: Question Data -->
+    <div class="form-section">
+        <form action="/" style="display: inline;">
+            <div class="button-group-right">
+                <button type="submit"  class="home-button">กลับหน้าหลัก</button>
+            </div>
+        </form>
+        <h2>Insert Question Data</h2>
+        <form action="/insert_test" method="POST" enctype="multipart/form-data">
+            <label for="lesson_name">Lesson Name:</label>
+
+
+
+      <label for="question_id">Question ID:</label>
+            <select id="question_id" name="question_id" required>
+                <option value="">Select a Question ID</option>
+                {% for i in range(1, 31) %}
+                    <option value="Q{{ "%02d"|format(i) }}">ข้อ {{ i }}</option>
+                {% endfor %}
+            </select><br>
+
+
+            <label for="question_text">คำถาม :</label>
+            <input type="text" id="question_text" name="question_text" required><br>
+
+            <label for="img_question">ภาพสำหรับคำถาม :</label>
+            <input type="file" id="img_question" name="img_question" accept="image/*"><br>
+
+            <label>Choices:</label>
+            <div class="choice-container">
+                <input type="radio" id="choice1" name="selected_choice" value="choice1">
+                <input type="text" name="choice1" placeholder="Choice 1" required>
+                <input type="file" name="img_choice1" accept="image/*">
+            </div>
+            <div class="choice-container">
+                <input type="radio" id="choice2" name="selected_choice" value="choice2">
+                <input type="text" name="choice2" placeholder="Choice 2" required>
+                <input type="file" name="img_choice2" accept="image/*">
+            </div>
+            <div class="choice-container">
+                <input type="radio" id="choice3" name="selected_choice" value="choice3">
+                <input type="text" name="choice3" placeholder="Choice 3" required>
+                <input type="file" name="img_choice3" accept="image/*">
+            </div>
+            <div class="choice-container">
+                <input type="radio" id="choice4" name="selected_choice" value="choice4">
+                <input type="text" name="choice4" placeholder="Choice 4" required>
+                <input type="file" name="img_choice4" accept="image/*">
+            </div>
+
+            <button type="submit">Submit Question Data</button>
+        </form>
+    </div>
+</body>
+</html>

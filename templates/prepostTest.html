@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบสอบถาม</title>
-    <style>
+    <title>แบบทดสอบวัดผลสัมฤทธิ์ทางการเรียน</title>
+       <style>
         .containerex {
-            max-width: 100%;
-            margin: 0px 0px;
-            padding: 2px;
+            max-width: 98% !important;
+            margin: 0px auto;
+            padding: 20px;
             background-color: #ffffff;
-            border-radius: 8px;
+         
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         h1 {
@@ -18,8 +18,8 @@
             color: #333;
         }
         .question {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 5px;
+            padding: 5px !important;
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #f9f9f9;
@@ -28,25 +28,32 @@
             font-size: 18px;
             color: #555;
         }
-       
+        .question-image {
+            width: 30%;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .option-image {
+            width: 15%;
+            height: auto;
+            margin-top: 5px;
+            display: block;
+            margin-left: 30px;
+        }
         label {
-            display: flex;                  /* เปลี่ยนจาก block เป็น flex */
-            align-items: center;           /* จัดให้ข้อความอยู่ระดับเดียวกับ radio */
-            gap: 5px;                      /* ระยะห่างระหว่าง radio กับข้อความ */
+            display: block;
+            margin: 5px 0 !important;
             font-size: 16px;
             color: #444;
-            margin: 5px 0;
-            padding: 3px;
         }
         input[type="radio"] {
-                margin: 0; /* เอา margin เดิมออก */
-                transform: scale(1.1); /* ขยายปุ่ม radio เล็กน้อยหากต้องการ */
+            margin-right: 10px;
         }
-        
         button {
             display: block;
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             margin-top: 20px;
             background-color: #4CAF50;
             color: white;
@@ -62,49 +69,48 @@
 .options-flex {
     display: flex;
     flex-wrap: wrap;         /* ให้ขึ้นบรรทัดใหม่เมื่อเต็มแถว */
-    gap: 2px;               /* ระยะห่างระหว่างช่อง */
+    gap: 5px;               /* ระยะห่างระหว่างช่อง */
     margin-top: 10px;
 }
 
 .option-box {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent ;
     flex: 0 1 calc(50% - 3px);  /* 2 คอลัมน์ */
     box-sizing: border-box;
+    border: none;   
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 1px;
-    background-color: #fdfdfd;
-}
-.option-box img {
-    display: block;
-    margin-left: 24px;  /* ❗ เยื้องขวามากขึ้น */
-    margin-top: 2px;
-    margin-bottom: 2px;
-    width: 80px;
-    max-width: 100%;
+    
 }
 .option-box2 {
-    
+       border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent ; 
     flex: 0 0 100%;              /* กำหนดความกว้างประมาณ 2 ช่อง */
     box-sizing: border-box;
+     
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 1px;
-    background-color: #fdfdfd;
+  
     min-width: 200px;          /* ป้องกันเล็กเกินไป */}
 
 .option-box.selected,
 .option-box2.selected {
     background-color: #4eee4e88;  /* สีเขียวอ่อนเมื่อถูกเลือก */
     border-color: #f5f0ef;
-}        
-        
-    </style>
+}    
+</style>
 </head>
 <body>
     <div class="containerex">
-        <h1>แบบสอบถาม</h1>
-        <h1>Lesson: {{ lesson_name }}</h1>
-        <p>Lesson ID: {{ lesson_id }}</p>
+        <h1>แบบทดสอบวัดผลสัมฤทธิ์ทางการเรียน</h1>
+        <h1>เรื่อง สร้างสื่อนำเสนอด้วยคอมพิวเตอร์กราฟิก</h1>
         <form action="/add_score" method="POST">
             {% for question in questions %}
                 <div class="question">
@@ -113,7 +119,7 @@
                         <div style="text-align: center;">
                         {% set q_path = url_for('static', filename='uploads/' ~ question.img_question) %}
        
-                            <img src="{{ q_path }}" alt="Question Image" style="width: 80%; max-width: 200px;" onerror="this.style.display='none'">
+                            <img src="{{ q_path }}" alt="Question Image" style="width: 100%; max-width: 300px;" onerror="this.style.display='none'">
                         </div>
                     {% endif %}
                    
@@ -123,13 +129,25 @@
                                     {% if question.img_choices[key] %}
                                     
                                     <div class="option-box">
-                                        <label>
-                                            <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
-                                        </label>
-                                        {% if question.img_choices[key] %}
-                                            {% set img_path = url_for('static', filename='uploads/' ~ question.img_choices[key]) %}
-                                            <img src="{{ img_path }}" alt="Option Image" onerror="this.style.display='none'">
+                                        {% if question.choices[key]!=" "%}
+                                            <label>
+                                                <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
+                                            </label>
+                                            {% if question.img_choices[key] %}
+                                                {% set img_path = url_for('static', filename='uploads/' ~ question.img_choices[key]) %}
+                                                <img src="{{ img_path }}" alt="Option Image" onerror="this.style.display='none'">
+                                            {% endif %}
+                                        {%else%}
+                                             <label >
+                                             <input type="radio" name="answer_{{ question.id }}" value="{{ key }}"> {{ question.choices[key] }}
+                                            
+                                            {% if question.img_choices[key] %}
+                                                {% set img_path = url_for('static', filename='uploads/' ~ question.img_choices[key]) %}
+                                                <img src="{{ img_path }}" alt="Option Image" onerror="this.style.display='none'">
+                                            {% endif %}
                                         {% endif %}
+                                        </label>
+
                                     </div>
                                     
                                     {% else%}
@@ -149,7 +167,7 @@
             {% endfor %}
             <input type="hidden" name="lesson_name" value="{{ lesson_name }}"> 
             <input type="hidden" name="lesson_id" value="{{ lesson_id }}"> 
-            <input type="hidden" name="state" value="{{ 'pre' }}"> 
+            <input type="hidden" name="state" value="{{ 'test' }}"> 
             <button type="submit">ส่งคำตอบ</button>
         </form>
         
