@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>บันทึกคะแนน</title>
+<style>
+    body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f4f7fa;
+        margin: 0;
+        padding: 20px;
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+    }
+    form {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    table th, table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+    table th {
+        background: #007bff;
+        color: white;
+    }
+    table tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    table tr:hover {
+        background: #eef4ff;
+    }
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    input[type="number"] {
+        width: 80px;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-end;  /* ชิดขวา */
+        gap: 8px; /* ชิดกันมากขึ้น */
+        margin-top: 20px;
+    }
+
+    #clearBtn {
+        background: #b22222;  /* สีแดงคลาสสิก */
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.3s ease;
+    }
+    #clearBtn:hover {
+        background: #7a1414;
+    }
+
+    #submitBtn {
+        background: #2e8b57;  /* สีเขียวคลาสสิก (SeaGreen) */
+        padding: 10px 22px;
+        font-size: 16px;
+        border-radius: 4px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.3s ease;
+    }
+    #submitBtn:hover {
+        background: #246a44;
+    }
+</style>
+</head>
+<body>
+
+<h2>บันทึกคะแนน</h2>
+<form id="scoreForm" action="/add_score_admin" method="POST">
+  <input type="hidden" name="lesson" value="{{ lesson }}">
+  <input type="hidden" name="topic" value="{{ topic }}">
+  <input type="hidden" name="subject" value="{{ subject }}">
+  <input type="hidden" name="class_name" value="{{ class_name }}">
+
+  <table>
+    <tr>
+      <th>เลขที่</th>
+      <th>ชื่อ</th>
+      <th>สกุล</th>
+      <th>ชิ้นงาน</th>
+      <th>คะแนน</th>
+    </tr>
+    {% for s in students %}
+    <tr>
+      <td>
+        {{ s.std_number }}
+        <input type="hidden" name="std_number" value="{{ s.std_number }}">
+      </td>
+      <td>{{ s.firstname }}</td>
+      <td>{{ s.lastname }}</td>
+      <td>
+        {% if s.work_link %}
+          <a href="{{ s.work_link }}" target="_blank">เปิดงาน</a>
+        {% else %}
+          <span style="color: #999;">ยังไม่ส่งงาน</span>
+        {% endif %}
+      </td>
+      <td><input type="number" name="score" min="0" max="100"></td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div class="button-group">
+    <button type="button" id="clearBtn">เคลียร์ข้อมูลคะแนน</button>
+    <button type="submit" id="submitBtn">ส่งคะแนน</button>
+  </div>
+</form>
+
+<script>
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    const inputs = document.querySelectorAll('input[type="number"][name="score"]');
+    inputs.forEach(input => input.value = "");
+  });
+</script>
+
+</body>
+</html>

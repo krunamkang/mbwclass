@@ -2,7 +2,7 @@
 
 import firebase_admin
 from firebase_admin import credentials, auth, firestore, db
-from flask import Flask, render_template, request,redirect, url_for, session, Response
+from flask import Flask, render_template, request,redirect, url_for, session, Response, jsonify
 import requests
 import os
 from werkzeug.utils import secure_filename
@@ -69,6 +69,68 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 
+@app.route("/show_student", methods=["POST"])
+def show_student():
+    lesson = request.form.get("lesson")
+    topic = request.form.get("subtopic")
+    class_name = request.form.get("classroom")
+    print("toppic คือ ",topic)
+    print("lesson คือ ",lesson)
+    users_ref = db.collection("users")
+    query = users_ref.where("std_class", "==", class_name)
+    docs = query.stream()
+    # ค้นหานักเรียน
+    students = []
+    for doc in docs:
+        data = doc.to_dict()
+
+        work_doc_ref = users_ref.document(doc.id).collection("score").document("task").collection(lesson).document(topic)
+        work_doc = work_doc_ref.get()
+        if work_doc.exists:
+            work_link = work_doc.to_dict().get("work", None)
+        else:
+            work_link = None
+
+        students.append({
+            "std_number": data.get("std_number", ""),
+            "firstname": data.get("firstname", ""),
+            "lastname": data.get("lastname", ""),
+            "work_link": work_link,
+            "score": ""
+        })
+
+    return render_template(
+        "form_score.html",
+        lesson=lesson,
+        topic=topic,
+        class_name=class_name,
+        students=students
+    )
+
+@app.route("/add_score_admin", methods=["POST"])
+def add_score_admin():
+    lesson = request.form.get("lesson")
+    topic = request.form.get("topic")
+    subject = request.form.get("subject")
+    class_name = request.form.get("class_name")
+
+    # คะแนนมาจากฟอร์มเป็น list
+    std_numbers = request.form.getlist("std_number")
+    scores = request.form.getlist("score")
+
+    for no, sc in zip(std_numbers, scores):
+        students_ref = db.collection("users").where("std_class", "==", class_name).where("std_number", "==", no)
+        for doc_snap in students_ref.get():
+            doc_id = doc_snap.id
+            db.collection("users").document(doc_id).collection("scores").document('task').collection(lesson).document(topic).set({
+    
+                "score": int(sc) if sc else None
+            })
+
+    return "บันทึกคะแนนเรียบร้อย"
+
+
+
 
 @app.route('/add_score', methods=['POST'])
 def add_score():
@@ -108,19 +170,22 @@ def add_score():
         # อัปเดตคะแนนใน Firestore
         if state=='pre':
             score_add='prescore'
+
         elif state=='post':
             score_add='postscore'
+
         elif state=='test':
             score_add='testcore'
         else:
             score = request.form.get('score')
             score_add='task'
-        user_ref = db.collection('users').document(user_id).collection('score').document(score_add)
-        lesson_score=lesson_name+'_'+lesson_id
-        user_ref.set({lesson_score: score})
-        print(f"เพิ่มคะแนน {score} ให้กับนักเรียน {user_id} สำเร็จ!")
 
-        score_ref = db.collection('users').document(user_id).collection('score').document('postscore') # อ้างอิงไปยัง collection "questions"
+        user_ref = db.collection('users').document(user_id).collection('score').document(score_add).collection(lesson_name).document(lesson_id)
+        user_ref.set({lesson_id:score})
+        print(f"เพิ่มคะแนน post score{score} ให้กับนักเรียน {user_id} สำเร็จ!")
+
+
+        score_ref = db.collection('users').document(user_id).collection('score').document('postscore').collection(lesson_name).document(lesson_id)
         score_docs = score_ref.get()  # ดึงเอกสารทั้งหมดใน collection
         
        # สร้างพจนานุกรมเก็บคำตอบที่ถูกต้อง
@@ -132,7 +197,7 @@ def add_score():
         else:
             print("ไม่พบเอกสาร postscore")
 
-        task_ref= db.collection('users').document(user_id).collection('score').document('task') # อ้างอิงไปยัง collection "questions"
+        task_ref= db.collection('users').document(user_id).collection('score').document('task').collection(lesson_name).document(lesson_id) # อ้างอิงไปยัง collection "questions"
         task_docs = task_ref.get()  # ดึงเอกสารทั้งหมดใน collection
         
        # สร้างพจนานุกรมเก็บคำตอบที่ถูกต้อง
@@ -163,7 +228,6 @@ def add_score():
         return "เกิดข้อผิดพลาด", 500
 
     return redirect(url_for('show_comment', option='option2',lesson_name=lesson_name,lesson_id=lesson_id))
-
 
 
 
@@ -228,7 +292,11 @@ def showTemplateAdmin():
         return render_template('insertTest.html')
     if menu_admin=='subLesson':
         return render_template('insertSub_Lesson.html')
+    if menu_admin=='task_score':
+        return render_template('insertTaskScore.html')
     
+
+
 
     return render_template('index.html')  # ส่งข้อมูลเป็น list
 

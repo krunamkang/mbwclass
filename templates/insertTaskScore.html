@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ฟอร์มเลือกบทเรียน</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
+            margin: 0;
+            padding: 0;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s ease-in-out;
+        }
+        select:focus, button:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>เลือกบทเรียน</h2>
+        <form action="/show_student" method="POST">
+            <!-- เลือกบทเรียน -->
+            <select id="lesson" name="lesson" required>
+                <option value="">-- เลือกบทเรียน --</option>
+                <option value="บทที่ 1 รู้จักกับ CANVA">บทที่ 1 รู้จักกับ CANVA</option>
+                <option value="บทที่ 2 ก้าวแรกสู่การออกแบบ">บทที่ 2 ก้าวแรกสู่การออกแบบ</option>
+                <option value="บทที่ 3 สื่อสร้างสรรค์ด้วยพลัง AI">บทที่ 3 สื่อสร้างสรรค์ด้วยพลัง AI</option>
+            </select>
+
+            <!-- เลือกหัวข้อย่อย -->
+            <select id="subtopic" name="subtopic" required>
+                <option value="">-- เลือกหัวข้อย่อย --</option>
+            </select>
+
+            <!-- เลือกห้องเรียน -->
+            <select name="classroom" required>
+                <option value="">-- เลือกห้องเรียน --</option>
+                <option value="ม.3/1">ม.3/1</option>
+                <option value="ม.3/2">ม.3/2</option>
+                <option value="ม.3/3">ม.3/3</option>
+            </select>
+
+            <button type="submit">บันทึก</button>
+        </form>
+    </div>
+
+    <script>
+
+              const subtopics = {
+        'บทที่ 1 รู้จักกับ CANVA': [
+          { label: "ข้อมูลทั่วไปของ CANVA", value: "L1" },
+          { label: "คำสั่งใช้งานพื้นฐาน", value: "L2" }
+        ],
+        'บทที่ 2 ก้าวแรกสู่การออกแบบ': [
+          { label: "ลดพลาสติก ใช้ชีวิตเปลี่ยนโลก", value: "L1" },
+          { label: "แยกขยะให้โลกยิ้ม", value: "L2" },
+          { label: "หยุดเผา หยุดฝุ่น", value: "L3" },
+          { label: "เกษตรกรยุคใหม่ งดใช้สารเคมีอันตราย", value: "L4" },
+          // ...
+        ],
+        'บทที่ 3 สื่อสร้างสรรค์ด้วยพลัง AI': [
+          { label: "ทิ้งขยะถูกที่ วิถีเด็กดีบักดอง", value: "L1" },
+          { label: "ขุนหาญ... เที่ยวไหนดี", value: "L2" },
+          { label: "ปราสาทตำหนักไทร ตอนที่ 1", value: "L3" },
+          { label: "ปราสาทตำหนักไทร ตอนที่ 2", value: "L4" },
+          // ...
+        ]
+          };
+
+
+document.getElementById("lesson").addEventListener("change", function () {
+  const selectedLesson = this.value;
+  const subtopicSelect = document.getElementById("subtopic");
+  subtopicSelect.innerHTML = '<option value="">-- เลือกหัวข้อย่อย --</option>';
+
+  if (subtopics[selectedLesson]) {
+    subtopics[selectedLesson].forEach(({label, value}) => {
+      const opt = document.createElement("option");
+      opt.value = value;      // กำหนด value เป็นรหัส
+      opt.textContent = label; // แสดงข้อความใน dropdown
+      subtopicSelect.appendChild(opt);
+    });
+  }
+});
+    </script>
+</body>
+</html>
